@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_912467_klf.ListMetric</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>ListMetric</name>
+        <script><![CDATA[var ListMetric = (function() {
+    // variables available
+    // current: GlideRecord -  target incident
+    // definition: GlideRecord -  (this row)
+    function getSavedValues(instanceSysId, fieldName) {
+        var mi = new GlideRecord('metric_instance');
+        mi.addQuery('id', instanceSysId);
+        mi.addQuery('field', fieldName);
+        mi.query();
+        var values = [];
+        while (mi.next()) {
+            values.push(mi.getValue('value'));
+        }
+        return values;
+    }
+
+    function exists(instanceSysId, fieldName, value) {
+        var mi = new GlideRecord('metric_instance');
+        mi.addQuery('id', instanceSysId);
+        mi.addQuery('field', fieldName);
+        mi.addQuery('value', value);
+        mi.query();
+        return mi.hasNext();
+    }
+
+    function createMetric(glideRecord, metricDefinition) {
+        var fieldName = metricDefinition.getValue('field');
+        gs.debug('current operation: ' + glideRecord.operation());
+        if (!glideRecord[fieldName].nil()) {
+            var values = glideRecord.getValue(fieldName).split(',');
+            var savedValues = getSavedValues(glideRecord.getUniqueValue(), fieldName);
+            var removedValues = new global.ArrayUtil().diff(savedValues, values);
+            values.forEach(function(value) {
+                if (!exists(glideRecord.getUniqueValue(), fieldName, value)) {
+                    var mi = new MetricUtils().createMetricInstance(glideRecord, metricDefinition);
+                    mi.value = value;
+                    mi.update();
+                }
+            });
+
+            if (removedValues.length > 0) {
+                var mi = new GlideRecord('metric_instance');
+                mi.addQuery('id', glideRecord.getUniqueValue());
+                mi.addQuery('definition', metricDefinition.getUniqueValue());
+                mi.addQuery('value', 'IN', removedValues);
+                mi.deleteMultiple();
+            }
+        } else {
+            var mi = new GlideRecord('metric_instance');
+            mi.addQuery('id', glideRecord.getUniqueValue());
+            mi.addQuery('definition', metricDefinition.getUniqueValue());
+            mi.query();
+            while (mi.next()) {
+                mi.deleteRecord();
+            }
+        }
+    }
+
+    return {
+        createMetric: createMetric
+    };
+
+})();
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-21 12:58:10</sys_created_on>
+        <sys_id>29226d5197682910b2e1f97e6253af1e</sys_id>
+        <sys_name>ListMetric</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_script_include_29226d5197682910b2e1f97e6253af1e</sys_update_name>
+    </sys_script_include>
+</record_update>

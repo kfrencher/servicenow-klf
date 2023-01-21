@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_912467_klf.GlideRecordUtils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>GlideRecordUtils</name>
+        <script><![CDATA[//@ts-ignore
+var x_53417_demo = x_53417_demo || {};
+/**
+ * @class x_snb_common.GlideRecordUtils
+ * contains utility functions
+ */
+x_53417_demo.GlideRecordUtils = (function() {
+    return {
+        /**
+         * Quickly retrieve a GlideRecord by sys_id
+         * @param {string} sysld
+         * @param {string} tableName
+         * @returns {?GlideRecord} Found GlideRecord or null
+         */
+        getRecord: function(sysld, tableName) {
+            var record = new GlideRecord(tableName);
+            if (record.get(sysld)) {
+                return record;
+            } else {
+                return null;
+            }
+        },
+        /**
+         * Checks to see if the provided GlideRecord is a new record through various mechanisms
+         * @param {GlideRecord} glideRecord A GlideRecord that uses extension
+         * @returns {GlideRecord} The extended GlideRecord
+         */
+        getExtendedGlideRecord: function(glideRecord) {
+            if (glideRecord.getTableName() != glideRecord.getRecordClassName()) {
+                var extended = new GlideRecord(glideRecord.getRecordClassName());
+                extended.get(glideRecord.getUniqueValue());
+                return extended;
+            } else {
+                return glideRecord;
+            }
+        },
+        /**
+         * Returns the sys_documentation label associated with a field. The
+         * sys_documentation record contains the label, help, and hint information
+         * for a field
+         * @param {string} tableName
+         * @param {string} fieldName
+         * @returns {object}
+         */
+        getFieldLabel: function(tableName, fieldName) {
+            var label = new GlideRecord('sys_documentation');
+            label.addQuery('name', tableName);
+            label.addQuery('element', fieldName);
+            label.query();
+            if (label.getRowCount() > 1) {
+                throw 'Found more than one label for the field' + tableName + '.' + fieldName;
+            }
+            if (label.next()) {
+                return this.glideRecordToMap(label);
+            } else {
+                return null;
+            }
+        },
+        /**
+         * Retrieves the true table name of a GlideRecord. In some situations an extended table will return
+         * the parent table name instead of the child table name if GlideRecord.getTableName is used
+         * @param {GlideRecord} glideRecord GlideRecord to retrieve true table name for
+         */
+        getTableName: function(glideRecord) {
+            return (glideRecord.sys_class_name && !glideRecord.sys_class_name.nil()) ?
+                glideRecord.getValue('sys_class_name') :
+                glideRecord.getTableName();
+        },
+        /**
+         * Returns whether or not a child table given by tableName extends an ancestor table given by superTableName
+         * If the tableName and superTableName are the same will return true
+         * @param {string} superTableName The name of an ancestor table to check if it has been extended
+         * @param {string} tableName The name of a child table to see if it extends the ancestor
+         * @returns {boolean}
+         */
+        extendsTable: function(superTableName, tableName) {
+            if (superTableName == tableName) {
+                return true;
+            }
+            //Maybe refactor this to use GlideTableHierarchy
+            // var tableHierarchy = new GlideTableHierarchy(requestTableName);
+            // var parentTables = tableHierarchy.getTables();
+            var dbRecord = new GlideRecord('sys_db_object');
+            if (dbRecord.get('name', tableName) && !dbRecord.super_class.nil()) {
+                var superDbRecord = dbRecord.super_class.getRefRecord();
+                var superTableNameCandidate = superDbRecord.getValue('name');
+                if (superTableName == superTableNameCandidate) {
+                    return true;
+                } else {
+                    return this.extendsTable(superTableName, superTableNameCandidate);
+                }
+            } else {
+                return false;
+            }
+        },
+        /**
+         * Returns a list of all the field names for a table
+         * @param {string} tableName Table name to retrieve fields
+         * @returns {string[]}
+         */
+        getTableFieldNames: function(tableName) {
+            return new GlideRecord(tableName).getElements().map(function(element) {
+                return element.getName();
+            });
+        },
+        /**
+         * Takes the names of two tables and returns the fields in the extended table that are
+         * not in the base table
+         * @param {string} baseTable The base table name that has been extended
+         * @param {string} extendedTable The extended table name that extends the base table
+         * @returns {string[]} A list of field names that are in the extended table that are not in the base table
+         */
+        getOnlyExtendedFields: function(baseTable, extendedTable) {
+            /**
+             * Returns the list of field names for a glide record
+             * @param {GlideRecord} glideRecord
+             * @returns {string[]}
+             */
+            function getFields(glideRecord) {
+                return glideRecord.getElements().map(function(element) {
+                    return element.getName();
+                });
+            }
+            var baseGr = new GlideRecord(baseTable);
+            var baseFields = getFields(baseGr);
+            var extendedGr = new GlideRecord(extendedTable)
+            var extendedFields = getFields(extendedGr);
+            return new global.ArrayUtil().diff(extendedFields, baseFields);
+        },
+        /**
+         * Returns the ServicePortal form URL
+         * @param {GlideRecord} glideRecord Glide record to retrieve url
+         */
+        getRecordUrl: function(glideRecord, portalUrl, formPage) {
+            return portalUrl + '?' +
+                'id=' + formPage +
+                '&table=' + glideRecord.getTableName() +
+                '&sys_id=' + glideRecord.getUniqueValue() +
+                '&view=sp';
+        },
+        /**
+         * Returns HTML anchor link to the ServicePortal form
+         * @param {GlideRecord} glideRecord GlideRecord to retrieve link
+         * @param {string} label Label for the link the user sees
+         * @returns {string}
+         */
+        getRecordHtmllink: function(glideRecord, label) {
+            return '<a href="' + this.getRecordUrl(glideRecord) + '">' + label + '</a>';
+        }
+    };
+})();]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-21 12:57:49</sys_created_on>
+        <sys_id>2c12e15197682910b2e1f97e6253afc4</sys_id>
+        <sys_name>GlideRecordUtils</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_script_include_2c12e15197682910b2e1f97e6253afc4</sys_update_name>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_912467_klf.DateUtils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>DateUtils</name>
+        <script><![CDATA[//@ts-ignore
+var x_53417_demo = x_53417_demo || {};
+/**
+ * @class x_snb_common.DateUtils
+ * contains utility functions
+ */
+x_53417_demo.DateUtils = (function() {
+    return {
+        /**
+         * Returns the fiscal year of the GlideDateTime in the form of YYYY
+         * @param {GlideDateTime} glideDateTime
+         * @returns {number}
+         */
+        getFiscalYear: function(glideDateTime) {
+            var month = glideDateTime.getMonthLocalTime();
+            var isBetweenOctoberAndDecember = month >= 10 && month <= 12;
+            var year = glideDateTime.getYearLocalTime();
+            return isBetweenOctoberAndDecember ? year + 1 : year;
+        },
+        /**
+         * Returns the fiscal year of the current date
+         * @returns {number}
+         */
+        getCurrentFiscalYear: function() {
+            return this.getFiscalYear(new GlideDateTime());
+        },
+        /**
+         * Returns a string that represents the start date of the current fiscal year
+         * @param {number} [yearsAgo]
+         * @returns {GlideDate}
+         */
+        getFiscalYearStartDate: function(yearsAgo) {
+            yearsAgo = yearsAgo || 0;
+            return new GlideDateTime((this.getCurrentFiscalYear() - yearsAgo - 1) + '-10-01 04:00:00').getDate();
+        },
+        /**
+         * Returns the current year in the form of YYYY
+         * @returns {number}
+         */
+        getCurrentYear: function() {
+            return new GlideDateTime().getYearLocalTime();
+        },
+        /**
+         * Returns a GlideDate that represents the number of business days
+         * after the current date based on the days argument
+         * @param {GlideDate} startDate
+         * @param {number} days
+         * @param {string} [scheduleSysId]
+         * @returns {GlideDate}
+         */
+        addBusinessDaysToDate: function(startDate, days, scheduleSysId) {
+            if (days < 0) throw 'Days must be greater than or equal to 0';
+            gs.debug('Start Date: ' + startDate.getByFormat('YYYY-MM-dd'));
+            var start = new GlideDateTime();
+            start.setDisplayValue(startDate.getByFormat('YYYY-MM-dd'));
+            // if the days is O then we need at least lms so the schedular checks if the current day is on the schedule
+            var duration = days === 0 ? new GlideDuration(1) : new GlideDuration(60 * 60 * 24 * 1000 * days);
+            var durationCalculator = new global.DurationCalculator();
+            gs.debug('Start: ' + start);
+            durationCalculator.setSchedule(scheduleSysId || 'e0abedd297c4e150b2e1f97e6253af21');
+            durationCalculator.calcRelativeDueDate(start, days);
+            return durationCalculator.getEndDateTime().getLocalDate();
+        },
+        /**
+         * Returns a GlideDate that represents the number of business days
+         * after the current date based on the days argument
+         * @param {number} days
+         * @param {string} [scheduleSysId]
+         * @returns {GlideDate}
+         */
+        addBusinessDays: function(days, scheduleSysId) {
+            var start = new GlideDateTime(gs.beginningOfToday()).getDate();
+            if (days < 0) {
+                return this.subtractBusinessDaysToDate(start, -1 * days, scheduleSysId);
+            } else {
+                return this.addBusinessDaysToDate(start, days, scheduleSysId);
+            }
+        },
+        /**
+         * Returns a GlideDate that represents the number of business days
+         * after the current date based on the days argument
+         * @param {GlideDate} startDate
+         * @param {number} days
+         * @param {string} [scheduleSysId]
+         * @returns {GlideDate}
+         */
+        subtractBusinessDaysToDate: function(startDate, days, scheduleSysId) {
+            // Formula to return an estimation of the number of business
+            // days in the past. This will be off because it only accounts
+            // for weekends, but it will be closer than just starting with
+            // the days parameter
+            function candidateBusinessDaysAgo( /**@type {number}*/ x) {
+                x = x < 0 ? -1 * x : x;
+                return (((x - (x % 5)) / 5) * 7) + (x % 5);
+            }
+            var schedule = new GlideSchedule(scheduleSysId || 'e0abedd297c4e150b2e1f97e6253af21');
+            if (days <= 0) throw 'Days must be greater than O';
+            // This script may run on a non-business day, so we get the next business
+            // day by asking for the business day O days from now
+            var currentBusinessDay = this.addBusinessDaysToDate(startDate, 0);
+            var loopCount = 0;
+            var candidateDayOffset = -1 * candidateBusinessDaysAgo(days);
+            do {
+                var result = null;
+                if (loopCount > 365) throw 'Could not do subtraction';
+                loopCount = loopCount + 1;
+                var candidateAnswer = new GlideDateTime(currentBusinessDay.getValue());
+                candidateAnswer.addDaysLocalTime(candidateDayOffset);
+                if (!schedule.isInSchedule(candidateAnswer)) {
+                    // if this day is not in the schedule skip to previous day
+                    candidateDayOffset = candidateDayOffset - 1;
+                    continue;
+                }
+                result = this.addBusinessDaysToDate(candidateAnswer.getDate(), days, scheduleSysId);
+                candidateDayOffset = candidateDayOffset - 1;
+            } while (result === null || result.getValue() != currentBusinessDay.getValue())
+            return candidateAnswer.getDate();
+        },
+        /**
+         * GlideDate representation of today's date
+         * @returns {GlideDate}
+         */
+        nowDate: function() {
+            return new GlideDate();
+        },
+        /**
+         * Returns a GlideDate that represents the date the number of days
+         * in the future based on the passed in argument. If you want days in the past then
+         * use a negative number of days
+         * @param {number} days
+         * @returns {GlideDate}
+         */
+        addDays: function(days) {
+            var daysAgo = new GlideDateTime();
+            daysAgo.addDaysLocalTime(days);
+            return daysAgo.getDate();
+        }
+    };
+})();]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-21 12:57:31</sys_created_on>
+        <sys_id>1402e95197682910b2e1f97e6253af2d</sys_id>
+        <sys_name>DateUtils</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_script_include_1402e95197682910b2e1f97e6253af2d</sys_update_name>
+    </sys_script_include>
+</record_update>
