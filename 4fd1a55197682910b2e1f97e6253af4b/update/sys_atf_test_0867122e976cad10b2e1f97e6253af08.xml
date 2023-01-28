@@ -5,14 +5,14 @@
         <description/>
         <enable_parameterized_testing>false</enable_parameterized_testing>
         <fail_on_server_error>true</fail_on_server_error>
-        <name>TestUtils</name>
+        <name>TestUtilsTest</name>
         <parameters/>
         <remember/>
         <sys_class_name>sys_atf_test</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-25 14:03:04</sys_created_on>
         <sys_id>0867122e976cad10b2e1f97e6253af08</sys_id>
-        <sys_name>TestUtils</sys_name>
+        <sys_name>TestUtilsTest</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy/>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
