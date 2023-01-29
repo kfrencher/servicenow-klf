@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="DELETE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_912467_klf.TestUtils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TestUtils</name>
+        <script><![CDATA[/** @ts-ignore */
+var x_912467_klf = x_912467_klf || {};
+
+x_912467_klf.TestUtils = (function() {
+    return {
+        /**
+         * Copies test steps from the from test to the to test. The copied
+         * test steps are added after the last test step in the to test.
+         * Returns the list of added test steps
+         * @param {string} fromTestSysId sys_atf_test.sys_id
+         * @param {GlideRecord} toTest sys_atf_test
+         * @returns {GlideRecord[]} sys_atf_step[] The list of added steps
+         */
+        addTestSteps: function(fromTestSysId, toTest) {
+            // copy test from test
+            var copiedTestSysId = this.copyTest(fromTestSysId);
+            var nextStepOrder = this.getMaxStepOrder(toTest.getUniqueValue());
+            // change the value of the order in each test step
+            this.updateStepOrder(copiedTestSysId, nextStepOrder);
+            // change the parent test of the test steps
+            this.moveSteps(copiedTestSysId, toTest.getUniqueValue());
+            // delete the copied test
+            this.deleteTest(copiedTestSysId);
+        },
+
+        /**
+         * Deletes the test given by sys_atf_test.sys_id
+         * @param {string} testSysId sys_atf_test.sys_id
+         */
+        deleteTest: function(testSysId) {
+            var test = new GlideRecord('sys_atf_test');
+            if(test.get(testSysId)) {
+                new global.KLF_GlideRecordUtils().deleteRecord('sys_atf_test', test.getEncodedQuery());
+            }
+        },
+
+        /**
+         * Renumbers the sys_atf_step.order starting with the passed in
+         * startOrder
+         * @param {string} testSysId sys_atf_test.sys_id
+         * @param {number} startOrder The starting value of sys_atf_step.order
+         */
+        updateStepOrder: function(testSysId, startOrder) {
+            var step = new GlideRecord('sys_atf_step');
+            step.addQuery('test', testSysId);
+            step.query();
+            while(step.next()) {
+                startOrder = startOrder + 1;
+                step.order = startOrder;
+                step.setWorkflow(false);
+                step.update();
+            }
+        },
+
+        /**
+         * Moves all the test steps from on test to another
+         * @param {string} fromTestSysId sys_atf_test.sys_id
+         * @param {string} toTestSysId sys_atf_test.sys_id
+         */
+        moveSteps: function(fromTestSysId, toTestSysId) {
+            var step = new GlideRecord('sys_atf_step');
+            step.addQuery('test', fromTestSysId);
+            new global.KLF_GlideRecordUtils().updateRecord('sys_atf_step', step.getEncodedQuery(), {
+                test: toTestSysId
+            });
+        },
+
+        /**
+         * Copies the source test to another test
+         * @param {string} sourceTestSysId sys_atf_test.sys_id
+         * @returns {string} sys_atf_test.sys_id of test copy
+         */
+        copyTest: function(sourceTestSysId) {
+            var userTestProcessor = new sn_atf.UserTestProcessor();
+            try {
+                return userTestProcessor.copyTest(sourceTestSysId);
+            } catch(ex) {
+                gs.addErrorMessage(gs.getMessage("Unexpected error occurred while copying the test: {0}", ex.message));
+            }
+        },
+
+        /**
+         * Looks through a test and returns the maximum value for the
+         * sys_atf_step.order field
+         * @param {string} testSysId sys_atf_test.sys_id
+         * @returns {number} The maximum value for sys_atf_step.order
+         */
+        getMaxStepOrder: function(testSysId) {
+            var maxOrder = new GlideAggregate('sys_atf_step');
+            maxOrder.groupBy('test');
+            maxOrder.addQuery('test', testSysId);
+            maxOrder.addQuery('active', true);
+            maxOrder.addAggregate('MAX', 'order');
+            maxOrder.query();
+
+            if(maxOrder.next()) {
+                return parseInt(maxOrder.getAggregate('MAX', 'order')) || 0; 
+            } else {
+                return 0;
+            }
+        }
+
+    };
+
+})();]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-25 14:06:37</sys_created_on>
+        <sys_id>6d38d66a976cad10b2e1f97e6253afa0</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>TestUtils</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_script_include_6d38d66a976cad10b2e1f97e6253afa0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-28 20:56:15</sys_updated_on>
+    </sys_script_include>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</application>
+        <file_path/>
+        <instance_id>3985fabbdb7037808aea21c40596199a</instance_id>
+        <instance_name>dev82424</instance_name>
+        <name>sys_script_include_6d38d66a976cad10b2e1f97e6253afa0</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_script_include"&gt;&lt;sys_script_include action="INSERT_OR_UPDATE"&gt;&lt;access&gt;public&lt;/access&gt;&lt;active&gt;true&lt;/active&gt;&lt;api_name&gt;x_912467_klf.TestUtils&lt;/api_name&gt;&lt;caller_access/&gt;&lt;client_callable&gt;false&lt;/client_callable&gt;&lt;description/&gt;&lt;name&gt;TestUtils&lt;/name&gt;&lt;script&gt;&lt;![CDATA[/** @ts-ignore */
+var x_912467_klf = x_912467_klf || {};
+
+x_912467_klf.TestUtils = (function() {
+    return {
+        /**
+         * Copies test steps from the from test to the to test. The copied
+         * test steps are added after the last test step in the to test.
+         * Returns the list of added test steps
+         * @param {string} fromTestSysId sys_atf_test.sys_id
+         * @param {GlideRecord} toTest sys_atf_test
+         * @returns {GlideRecord[]} sys_atf_step[] The list of added steps
+         */
+        addTestSteps: function(fromTestSysId, toTest) {
+            // copy test from test
+            var copiedTestSysId = this.copyTest(fromTestSysId);
+            var nextStepOrder = this.getMaxStepOrder(toTest.getUniqueValue());
+            // change the value of the order in each test step
+            this.updateStepOrder(copiedTestSysId, nextStepOrder);
+            // change the parent test of the test steps
+            this.moveSteps(copiedTestSysId, toTest.getUniqueValue());
+            // delete the copied test
+            this.deleteTest(copiedTestSysId);
+        },
+
+        /**
+         * Deletes the test given by sys_atf_test.sys_id
+         * @param {string} testSysId sys_atf_test.sys_id
+         */
+        deleteTest: function(testSysId) {
+            var test = new GlideRecord('sys_atf_test');
+            if(test.get(testSysId)) {
+                new global.KLF_GlideRecordUtils().deleteRecord('sys_atf_test', test.getEncodedQuery());
+            }
+        },
+
+        /**
+         * Renumbers the sys_atf_step.order starting with the passed in
+         * startOrder
+         * @param {string} testSysId sys_atf_test.sys_id
+         * @param {number} startOrder The starting value of sys_atf_step.order
+         */
+        updateStepOrder: function(testSysId, startOrder) {
+            var step = new GlideRecord('sys_atf_step');
+            step.addQuery('test', testSysId);
+            step.query();
+            while(step.next()) {
+                startOrder = startOrder + 1;
+                step.order = startOrder;
+                step.setWorkflow(false);
+                step.update();
+            }
+        },
+
+        /**
+         * Moves all the test steps from on test to another
+         * @param {string} fromTestSysId sys_atf_test.sys_id
+         * @param {string} toTestSysId sys_atf_test.sys_id
+         */
+        moveSteps: function(fromTestSysId, toTestSysId) {
+            var step = new GlideRecord('sys_atf_step');
+            step.addQuery('test', fromTestSysId);
+            new global.KLF_GlideRecordUtils().updateRecord('sys_atf_step', step.getEncodedQuery(), {
+                test: toTestSysId
+            });
+        },
+
+        /**
+         * Copies the source test to another test
+         * @param {string} sourceTestSysId sys_atf_test.sys_id
+         * @returns {string} sys_atf_test.sys_id of test copy
+         */
+        copyTest: function(sourceTestSysId) {
+            var userTestProcessor = new sn_atf.UserTestProcessor();
+            try {
+                return userTestProcessor.copyTest(sourceTestSysId);
+            } catch(ex) {
+                gs.addErrorMessage(gs.getMessage("Unexpected error occurred while copying the test: {0}", ex.message));
+            }
+        },
+
+        /**
+         * Looks through a test and returns the maximum value for the
+         * sys_atf_step.order field
+         * @param {string} testSysId sys_atf_test.sys_id
+         * @returns {number} The maximum value for sys_atf_step.order
+         */
+        getMaxStepOrder: function(testSysId) {
+            var maxOrder = new GlideAggregate('sys_atf_step');
+            maxOrder.groupBy('test');
+            maxOrder.addQuery('test', testSysId);
+            maxOrder.addQuery('active', true);
+            maxOrder.addAggregate('MAX', 'order');
+            maxOrder.query();
+
+            if(maxOrder.next()) {
+                return parseInt(maxOrder.getAggregate('MAX', 'order')) || 0; 
+            } else {
+                return 0;
+            }
+        }
+
+    };
+
+})();]]&gt;&lt;/script&gt;&lt;sys_class_name&gt;sys_script_include&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2023-01-25 14:06:37&lt;/sys_created_on&gt;&lt;sys_id&gt;6d38d66a976cad10b2e1f97e6253afa0&lt;/sys_id&gt;&lt;sys_mod_count&gt;7&lt;/sys_mod_count&gt;&lt;sys_name&gt;TestUtils&lt;/sys_name&gt;&lt;sys_package display_value="KLF" source="x_912467_klf"&gt;4fd1a55197682910b2e1f97e6253af4b&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="KLF"&gt;4fd1a55197682910b2e1f97e6253af4b&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_script_include_6d38d66a976cad10b2e1f97e6253afa0&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2023-01-28 20:56:15&lt;/sys_updated_on&gt;&lt;/sys_script_include&gt;&lt;/record_update&gt;</payload>
+        <payload_hash>-1202033833</payload_hash>
+        <record_name>TestUtils</record_name>
+        <reverted_from/>
+        <source>d265ad5597682910b2e1f97e6253af08</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-28 20:56:15</sys_created_on>
+        <sys_id>dfb2572b97ace150b2e1f97e6253af9a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>185fa2a9f3d0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-28 20:56:15</sys_updated_on>
+        <type>Script Include</type>
+        <update_guid>d7b2572b1bace150170fc8bbeec5fa9a</update_guid>
+        <update_guid_history>d7b2572b1bace150170fc8bbeec5fa9a:-1202033833,fe801f6783ace1503b134e12de521b2c:-389833978,4fef4f6397ace1505de236d122c4a9dd:-49021567,5e918fa32a6ce150b919da5be17db49b:-1307126672,e8410baf302ce150b4ab0e198dcb71eb:-310951992,9d5ff62f272ce150ba7c432e8ec4bdbc:-1096709008,7b4f3aaf4c2ce150218001d9bb34edf6:-1065713692,0dc57bf2b1282150ebd0bbadff0c8c99:-1523337665,360991f2632ced1021f462dcd10f0c5d:-245801631,9bd8d1720f2ced109a11bdc218d9d9d0:290147757,dcd655fe11e8ed10608e8d7b5424c709:-327227709,cb5115764fe8ed103b58e6cd35641e4c:809144578,57e7ecb69a28ed108e807c236ef18823:-1608946531,3138d66a776cad10bfb830fb228e19a3:1276981588</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 00:37:52</sys_created_on>
+        <sys_db_object display_value="" name="sys_script_include">sys_script_include</sys_db_object>
+        <sys_id>014fedc508e640c29596275c7a4c48c1</sys_id>
+        <sys_metadata>6d38d66a976cad10b2e1f97e6253afa0</sys_metadata>
+        <sys_name>TestUtils</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_scope_delete display_value="">0549564ff37b46c085efa585718ebfe4</sys_scope_delete>
+        <sys_update_name>sys_script_include_6d38d66a976cad10b2e1f97e6253afa0</sys_update_name>
+        <sys_update_version display_value="sys_script_include_6d38d66a976cad10b2e1f97e6253afa0">dfb2572b97ace150b2e1f97e6253af9a</sys_update_version>
+    </sys_metadata_delete>
+</record_update>

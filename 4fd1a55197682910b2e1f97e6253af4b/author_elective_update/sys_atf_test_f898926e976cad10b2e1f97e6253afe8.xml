@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_test">
+    <sys_atf_test action="DELETE">
+        <active>true</active>
+        <copied_from/>
+        <description/>
+        <enable_parameterized_testing>false</enable_parameterized_testing>
+        <fail_on_server_error>true</fail_on_server_error>
+        <name>TestUtils Create Test Template</name>
+        <parameters/>
+        <remember/>
+        <sys_class_name>sys_atf_test</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-25 14:08:28</sys_created_on>
+        <sys_id>f898926e976cad10b2e1f97e6253afe8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>TestUtils Create Test Template</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_atf_test_f898926e976cad10b2e1f97e6253afe8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-25 14:08:28</sys_updated_on>
+    </sys_atf_test>
+    <sys_variable_value action="DELETE" query="document_key=f898926e976cad10b2e1f97e6253afe8"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</application>
+        <file_path/>
+        <instance_id>3985fabbdb7037808aea21c40596199a</instance_id>
+        <instance_name>dev82424</instance_name>
+        <name>sys_atf_test_f898926e976cad10b2e1f97e6253afe8</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_test"><sys_atf_test action="INSERT_OR_UPDATE"><active>true</active><copied_from/><description/><enable_parameterized_testing>false</enable_parameterized_testing><fail_on_server_error>true</fail_on_server_error><name>TestUtils Create Test Template</name><parameters/><remember/><sys_class_name>sys_atf_test</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-25 14:08:28</sys_created_on><sys_id>f898926e976cad10b2e1f97e6253afe8</sys_id><sys_mod_count>0</sys_mod_count><sys_name>TestUtils Create Test Template</sys_name><sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package><sys_policy/><sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope><sys_update_name>sys_atf_test_f898926e976cad10b2e1f97e6253afe8</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-25 14:08:28</sys_updated_on></sys_atf_test><sys_variable_value action="delete_multiple" query="document_key=f898926e976cad10b2e1f97e6253afe8"/></record_update>]]></payload>
+        <payload_hash>850102552</payload_hash>
+        <record_name>TestUtils Create Test Template</record_name>
+        <reverted_from/>
+        <source>d265ad5597682910b2e1f97e6253af08</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-25 14:08:28</sys_created_on>
+        <sys_id>3ca89a6e976cad10b2e1f97e6253afff</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>185e942337a0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-25 14:08:28</sys_updated_on>
+        <type>Test</type>
+        <update_guid>74a89a6ec56cad10bb8fc876649617ff</update_guid>
+        <update_guid_history>74a89a6ec56cad10bb8fc876649617ff:850102552</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 00:37:36</sys_created_on>
+        <sys_db_object display_value="" name="sys_atf_test">sys_atf_test</sys_db_object>
+        <sys_id>04eff38a98b24033adb1937b8f89d9b9</sys_id>
+        <sys_metadata>f898926e976cad10b2e1f97e6253afe8</sys_metadata>
+        <sys_name>TestUtils Create Test Template</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_scope_delete display_value="">0549564ff37b46c085efa585718ebfe4</sys_scope_delete>
+        <sys_update_name>sys_atf_test_f898926e976cad10b2e1f97e6253afe8</sys_update_name>
+        <sys_update_version display_value="sys_atf_test_f898926e976cad10b2e1f97e6253afe8">3ca89a6e976cad10b2e1f97e6253afff</sys_update_version>
+    </sys_metadata_delete>
+</record_update>

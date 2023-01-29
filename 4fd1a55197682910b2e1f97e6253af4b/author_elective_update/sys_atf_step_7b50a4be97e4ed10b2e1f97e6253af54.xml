@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="DELETE">
+        <active>true</active>
+        <copied_from/>
+        <description>Insert a record into 'sys_atf_step' with the following values:
+Description = Test atf step
+and Step config = Log
+and Test = {{Step 1: Record Insert.Record}}
+Confirm the record was successfully inserted
+
+Warning: Using a system table may cause unexpected behavior for other tests running in parallel&#13;
+See the documentation for Test Design Considerations</description>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>2</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:30</sys_created_on>
+        <sys_id>7b50a4be97e4ed10b2e1f97e6253af54</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_atf_step_7b50a4be97e4ed10b2e1f97e6253af54</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:30</sys_updated_on>
+        <table>sys_atf_step</table>
+        <test display_value="TestUtils Create Test Template">f898926e976cad10b2e1f97e6253afe8</test>
+        <timeout/>
+        <warning_message>Warning: Using a system table may cause unexpected behavior for other tests running in parallel&#13;
+See the documentation for Test Design Considerations</warning_message>
+    </sys_atf_step>
+    <sys_variable_value action="DELETE" query="document_key=7b50a4be97e4ed10b2e1f97e6253af54"/>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:31</sys_created_on>
+        <sys_id>04602cbe97e4ed10b2e1f97e6253af82</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:31</sys_updated_on>
+        <value>description=Test atf step^step_config=58ab71985f30220012b44adb7f46661e^test={{step['45b81e6e976cad10b2e1f97e6253af41'].record_id}}^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:31</sys_created_on>
+        <sys_id>40602cbe97e4ed10b2e1f97e6253af82</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:31</sys_updated_on>
+        <value>sys_atf_step</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:31</sys_created_on>
+        <sys_id>8c602cbe97e4ed10b2e1f97e6253af81</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:31</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:31</sys_created_on>
+        <sys_id>c8602cbe97e4ed10b2e1f97e6253af81</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:31</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="DELETE" query="id=7b50a4be97e4ed10b2e1f97e6253af54"/>
+    <sys_element_mapping action="DELETE">
+        <field>field_values</field>
+        <id>7b50a4be97e4ed10b2e1f97e6253af54</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:31</sys_created_on>
+        <sys_id>08602cbe97e4ed10b2e1f97e6253af82</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:31</sys_updated_on>
+        <table>var__m_atf_input_variable_14872288df60220062fe6c7a4df26319</table>
+        <value>description=Test atf step^step_config=58ab71985f30220012b44adb7f46661e^test={{step['45b81e6e976cad10b2e1f97e6253af41'].record_id}}^EQ</value>
+    </sys_element_mapping>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</application>
+        <file_path/>
+        <instance_id>3985fabbdb7037808aea21c40596199a</instance_id>
+        <instance_name>dev82424</instance_name>
+        <name>sys_atf_step_7b50a4be97e4ed10b2e1f97e6253af54</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step"><sys_atf_step action="INSERT_OR_UPDATE"><active>true</active><copied_from/><description>Insert a record into 'sys_atf_step' with the following values:
+Description = Test atf step
+and Step config = Log
+and Test = {{Step 1: Record Insert.Record}}
+Confirm the record was successfully inserted
+
+Warning: Using a system table may cause unexpected behavior for other tests running in parallel&#13;
+See the documentation for Test Design Considerations</description><display_name>Record Insert</display_name><inputs/><inputs/><mugshots_cache_json/><notes/><order>2</order><step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config><sys_class_name>sys_atf_step</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-26 00:01:30</sys_created_on><sys_id>7b50a4be97e4ed10b2e1f97e6253af54</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Record Insert</sys_name><sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package><sys_policy/><sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope><sys_update_name>sys_atf_step_7b50a4be97e4ed10b2e1f97e6253af54</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-26 00:01:30</sys_updated_on><table>sys_atf_step</table><test display_value="TestUtils Create Test Template">f898926e976cad10b2e1f97e6253afe8</test><timeout/><warning_message>Warning: Using a system table may cause unexpected behavior for other tests running in parallel&#13;
+See the documentation for Test Design Considerations</warning_message></sys_atf_step><sys_variable_value action="delete_multiple" query="document_key=7b50a4be97e4ed10b2e1f97e6253af54"/><sys_variable_value action="INSERT_OR_UPDATE"><document>sys_atf_step</document><document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key><order>400</order><sys_class_name>sys_variable_value</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-26 00:01:31</sys_created_on><sys_id>04602cbe97e4ed10b2e1f97e6253af82</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-26 00:01:31</sys_updated_on><value>description=Test atf step^step_config=58ab71985f30220012b44adb7f46661e^test={{step['45b81e6e976cad10b2e1f97e6253af41'].record_id}}^EQ</value><variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable></sys_variable_value><sys_variable_value action="INSERT_OR_UPDATE"><document>sys_atf_step</document><document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key><order>200</order><sys_class_name>sys_variable_value</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-26 00:01:31</sys_created_on><sys_id>40602cbe97e4ed10b2e1f97e6253af82</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-26 00:01:31</sys_updated_on><value>sys_atf_step</value><variable display_value="Table">90144b535320220002c6435723dc3488</variable></sys_variable_value><sys_variable_value action="INSERT_OR_UPDATE"><document>sys_atf_step</document><document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key><order>100</order><sys_class_name>sys_variable_value</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-26 00:01:31</sys_created_on><sys_id>8c602cbe97e4ed10b2e1f97e6253af81</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-26 00:01:31</sys_updated_on><value>1</value><variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable></sys_variable_value><sys_variable_value action="INSERT_OR_UPDATE"><document>sys_atf_step</document><document_key>7b50a4be97e4ed10b2e1f97e6253af54</document_key><order>100</order><sys_class_name>sys_variable_value</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-26 00:01:31</sys_created_on><sys_id>c8602cbe97e4ed10b2e1f97e6253af81</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-26 00:01:31</sys_updated_on><value>record_successfully_inserted</value><variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable></sys_variable_value><sys_element_mapping action="delete_multiple" query="id=7b50a4be97e4ed10b2e1f97e6253af54"/><sys_element_mapping action="INSERT_OR_UPDATE"><field>field_values</field><id>7b50a4be97e4ed10b2e1f97e6253af54</id><sys_created_by>admin</sys_created_by><sys_created_on>2023-01-26 00:01:31</sys_created_on><sys_id>08602cbe97e4ed10b2e1f97e6253af82</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2023-01-26 00:01:31</sys_updated_on><table>var__m_atf_input_variable_14872288df60220062fe6c7a4df26319</table><value>description=Test atf step^step_config=58ab71985f30220012b44adb7f46661e^test={{step['45b81e6e976cad10b2e1f97e6253af41'].record_id}}^EQ</value></sys_element_mapping></record_update>]]></payload>
+        <payload_hash>-1405263743</payload_hash>
+        <record_name>Record Insert</record_name>
+        <reverted_from/>
+        <source>d265ad5597682910b2e1f97e6253af08</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-26 00:01:31</sys_created_on>
+        <sys_id>40602cbe97e4ed10b2e1f97e6253afe8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>185eb6127e10000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-26 00:01:31</sys_updated_on>
+        <type>Test Step</type>
+        <update_guid>88602cbef3e4ed10e9956320ed7920e7</update_guid>
+        <update_guid_history>88602cbef3e4ed10e9956320ed7920e7:-1405263743</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 00:37:35</sys_created_on>
+        <sys_db_object display_value="" name="sys_atf_step">sys_atf_step</sys_db_object>
+        <sys_id>5c141e74029545baad2d64ad53822061</sys_id>
+        <sys_metadata>7b50a4be97e4ed10b2e1f97e6253af54</sys_metadata>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_scope_delete display_value="">0549564ff37b46c085efa585718ebfe4</sys_scope_delete>
+        <sys_update_name>sys_atf_step_7b50a4be97e4ed10b2e1f97e6253af54</sys_update_name>
+        <sys_update_version display_value="sys_atf_step_7b50a4be97e4ed10b2e1f97e6253af54">40602cbe97e4ed10b2e1f97e6253afe8</sys_update_version>
+    </sys_metadata_delete>
+</record_update>
