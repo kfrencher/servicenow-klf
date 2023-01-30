@@ -17,7 +17,7 @@
         <name>KLF</name>
         <private>false</private>
         <restrict_table_access>false</restrict_table_access>
-        <runtime_access_tracking>permissive</runtime_access_tracking>
+        <runtime_access_tracking/>
         <scope>x_912467_klf</scope>
         <scoped_administration>false</scoped_administration>
         <short_description/>
