@@ -122,7 +122,7 @@ x_53417_demo.DateUtils = (function() {
                 }
                 result = this.addBusinessDaysToDate(candidateAnswer.getDate(), days, scheduleSysId);
                 candidateDayOffset = candidateDayOffset - 1;
-            } while (result === null || result.getValue() != currentBusinessDay.getValue())
+            } while (result === null || result.getValue() != currentBusinessDay.getValue());
             return candidateAnswer.getDate();
         },
         /**

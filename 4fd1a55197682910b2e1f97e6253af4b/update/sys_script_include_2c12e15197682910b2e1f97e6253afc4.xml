@@ -132,7 +132,7 @@ x_53417_demo.GlideRecordUtils = (function() {
             }
             var baseGr = new GlideRecord(baseTable);
             var baseFields = getFields(baseGr);
-            var extendedGr = new GlideRecord(extendedTable)
+            var extendedGr = new GlideRecord(extendedTable);
             var extendedFields = getFields(extendedGr);
             return new global.ArrayUtil().diff(extendedFields, baseFields);
         },

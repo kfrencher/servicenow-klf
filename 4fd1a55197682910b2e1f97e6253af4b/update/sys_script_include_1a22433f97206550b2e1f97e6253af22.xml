@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_912467_klf.GroupUtils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>GroupUtils</name>
+        <script><![CDATA[//@ts-ignore
+var x_912467_klf = x_912467_klf || {};
+
+/**
+ * Utility functions for sys_user_group
+ */
+x_912467_klf.GroupUtils = (function() {
+    var glideRecordUtils = new global.KLF_GlideRecordUtils();
+
+    class GroupUtils {
+        /**
+         * Returns true is the user is a member
+         * of the sys_user_group
+         * @param {string} groupSysId sys_user_group.sys_id
+         * @param {string} userSysId sys_user.sys_id
+         * @returns {boolean}
+         */
+        isMemberOf(groupSysId, userSysId) {
+            const gr = new GlideRecord('sys_user_grmember');
+            gr.addQuery('group', groupSysId);
+            gr.addQuery('user', userSysId);
+            gr.query();
+            return gr.hasNext();
+        }
+
+        /**
+         * Creates a new sys_user_group record
+         * @param {string} groupName - The name of the group to create
+         * @returns {GlideRecord} - The newly created sys_user_group record
+         */
+        createGroup(groupName) {
+            return glideRecordUtils.insertRecord('sys_user_group', {
+                name: groupName
+            });
+        }
+
+        /**
+         * Creates a new sys_user record
+         * @param {string} userName - The name of the user to create
+         */
+        createUser(userName) {
+            return glideRecordUtils.insertRecord('sys_user', {
+                user_name: userName
+            });
+        }
+
+        /**
+         * Adds a user to a group
+         * @param {GlideRecord} user - The user to add to the group
+         * @param {GlideRecord} group - The group to add the user to
+         */
+        addUserToGroup(user, group) {
+            glideRecordUtils.insertRecord('sys_user_grmember', {
+                user: user.getUniqueValue(),
+                group: group.getUniqueValue()
+            });
+        }
+    }
+
+    return new GroupUtils();
+
+})();]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 14:22:17</sys_created_on>
+        <sys_id>1a22433f97206550b2e1f97e6253af22</sys_id>
+        <sys_name>GroupUtils</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_script_include_1a22433f97206550b2e1f97e6253af22</sys_update_name>
+    </sys_script_include>
+</record_update>

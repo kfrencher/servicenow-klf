@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copied_from/>
+        <description>Run Server Side Validation Script</description>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 16:15:10</sys_created_on>
+        <sys_id>36bb1bbb97a06550b2e1f97e6253afef</sys_id>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_atf_step_36bb1bbb97a06550b2e1f97e6253afef</sys_update_name>
+        <table/>
+        <test display_value="GroupUtilsTest">875a9f3b97a06550b2e1f97e6253afd3</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=36bb1bbb97a06550b2e1f97e6253afef"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>36bb1bbb97a06550b2e1f97e6253afef</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 16:15:10</sys_created_on>
+        <sys_id>3bfb5bbb97a06550b2e1f97e6253af38</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-29 16:15:10</sys_updated_on>
+        <value>3.1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>36bb1bbb97a06550b2e1f97e6253afef</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-01-29 16:15:10</sys_created_on>
+        <sys_id>73fb5bbb97a06550b2e1f97e6253af39</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-01-29 23:46:28</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+
+    var groupUtils = x_912467_klf.GroupUtils;
+
+    describe('x_912467_klf.GroupUtils.isMemberOf', function() {
+
+        var group1 = null;
+        var group1member1 = null;
+        var group1member2 = null;
+
+        var group2 = null;
+        var group2member1 = null;
+        var group2member2 = null;
+
+        beforeAll(function() {
+            group1 = groupUtils.createGroup('Test Group1');
+            group1member1 = groupUtils.createUser('Test User1');
+            group1member2 = groupUtils.createUser('Test User2');
+            groupUtils.addUserToGroup(group1member1, group1);
+            groupUtils.addUserToGroup(group1member2, group1);
+
+            group2 = groupUtils.createGroup('Test Group2');
+            group2member1 = groupUtils.createUser('Test User3');
+            group2member2 = groupUtils.createUser('Test User4');
+            groupUtils.addUserToGroup(group2member1, group2);
+            groupUtils.addUserToGroup(group2member2, group2);
+        });
+
+        it('should return true if user is member of group', function() {
+            var isMember = 
+                groupUtils.isMemberOf(group1.getUniqueValue(), group1member1.getUniqueValue());
+            expect(isMember).toBe(true);
+        });
+
+        it('should return false if user is not member of group', function() {
+            var isMember = 
+                groupUtils.isMemberOf(group1.getUniqueValue(), group2member1.getUniqueValue());
+            expect(isMember).toBe(false);
+        });
+
+    });
+
+//@ts-ignore
+})(outputs, steps, params, stepResult, assertEqual);
+
+jasmine.getEnv().execute();</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+</record_update>

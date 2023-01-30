@@ -7,7 +7,10 @@
         <client_callable>false</client_callable>
         <description/>
         <name>CalendarCreator</name>
-        <script><![CDATA[var CalendarCreator = (function() {
+        <script><![CDATA[//@ts-ignore
+var x_912467_klf = x_912467_klf || {};
+
+x_912467_klf.CalendarCreator = (function() {
     return {
         fiscalQuarterCalendarName: 'Fiscal Quarter',
         /**
@@ -179,7 +182,7 @@
          * @returns {[string,string]} A pair representing the start and end
          */
         getYearDateRange: function(year) {
-            return [year - 1 + '-10-01 00:00:00', year + '-10-01']
+            return [year - 1 + '-10-01 00:00:00', year + '-10-01'];
         },
 
         /**
