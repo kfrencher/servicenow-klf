@@ -18,6 +18,21 @@ x_912467_klf.GroupUtils = (function() {
 
     class GroupUtils {
         /**
+         * Returns the sys_user_group record with the given name
+         * @param {string} groupName - The name of the group to find
+         * @returns {GlideRecord} - The sys_user_group record
+         */
+        getGroupByName(groupName) {
+            const group = new GlideRecord('sys_user_group');
+            if(group.get('name', groupName)) {
+                return group;
+            } else {
+                return null;
+            }
+        }
+
+
+        /**
          * Returns true is the user is a member
          * of the sys_user_group
          * @param {string} groupSysId sys_user_group.sys_id
@@ -49,7 +64,10 @@ x_912467_klf.GroupUtils = (function() {
          */
         createUser(userName) {
             return glideRecordUtils.insertRecord('sys_user', {
-                user_name: userName
+                user_name: userName,
+                first_name: userName + 'first',
+                last_name: userName + 'last',
+                email: userName + '@example.com'
             });
         }
 

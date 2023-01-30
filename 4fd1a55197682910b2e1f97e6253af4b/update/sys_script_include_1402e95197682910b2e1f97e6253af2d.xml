@@ -8,12 +8,12 @@
         <description/>
         <name>DateUtils</name>
         <script><![CDATA[//@ts-ignore
-var x_53417_demo = x_53417_demo || {};
+var x_912467_klf = x_912467_klf || {};
 /**
  * @class x_snb_common.DateUtils
  * contains utility functions
  */
-x_53417_demo.DateUtils = (function() {
+x_912467_klf.DateUtils = (function() {
     return {
         /**
          * Returns the fiscal year of the GlideDateTime in the form of YYYY
