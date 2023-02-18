@@ -44,7 +44,7 @@ x_912467_klf.ListMetric = (function() {
             var removedValues = new global.ArrayUtil().diff(savedValues, values);
             values.forEach(function(value) {
                 if (!exists(glideRecord.getUniqueValue(), fieldName, value)) {
-                    var mi = new MetricUtils().createMetricInstance(glideRecord, metricDefinition);
+                    var mi = new global.MetricUtils().createMetricInstance(glideRecord, metricDefinition);
                     mi.value = value;
                     mi.update();
                 }
