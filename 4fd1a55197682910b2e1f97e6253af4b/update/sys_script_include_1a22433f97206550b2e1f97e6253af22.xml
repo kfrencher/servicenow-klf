@@ -18,6 +18,22 @@ x_912467_klf.GroupUtils = (function() {
 
     class GroupUtils {
         /**
+         * Returns the list of sys_user_group.sys_id for the user
+         * @param {GlideRecord} userSysId - The sys_user.sys_id
+         * @returns {string[]} - The list of sys_user_group.sys_id
+         */
+        getGroupSysIdsForUser(userSysId) {
+            const gr = new GlideRecord('sys_user_grmember');
+            gr.addQuery('user', userSysId);
+            gr.query();
+            const groupSysIds = [];
+            while(gr.next()) {
+                groupSysIds.push(gr.group.toString());
+            }
+            return groupSysIds;
+        }
+
+        /**
          * Returns the sys_user_group record with the given name
          * @param {string} groupName - The name of the group to find
          * @returns {GlideRecord} - The sys_user_group record
