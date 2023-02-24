@@ -17,9 +17,25 @@ x_912467_klf.GroupUtils = (function() {
     var glideRecordUtils = new global.KLF_GlideRecordUtils();
 
     class GroupUtils {
+
+
+        /**
+         * Returns true if the user is a member of any of the groups
+         * @param {string} userSysId 
+         * @param {string[]|string} groupSysIds sys_user_group.sys_id[] or concatenated string of sys_user_group.sys_id
+         * @returns {boolean}
+         */
+        isMemberOfSomeGroup(userSysId, groupSysIds) {
+            const groupMember = new GlideRecord('sys_user_grmember');
+            groupMember.addQuery('user', userSysId);
+            groupMember.addQuery('group', 'IN', groupSysIds);
+            groupMember.query();
+            return groupMember.hasNext();
+        }
+
         /**
          * Returns the list of sys_user_group.sys_id for the user
-         * @param {GlideRecord} userSysId - The sys_user.sys_id
+         * @param {string} userSysId - The sys_user.sys_id
          * @returns {string[]} - The list of sys_user_group.sys_id
          */
         getGroupSysIdsForUser(userSysId) {
@@ -36,7 +52,7 @@ x_912467_klf.GroupUtils = (function() {
         /**
          * Returns the sys_user_group record with the given name
          * @param {string} groupName - The name of the group to find
-         * @returns {GlideRecord} - The sys_user_group record
+         * @returns {?GlideRecord} - The sys_user_group record
          */
         getGroupByName(groupName) {
             const group = new GlideRecord('sys_user_group');
@@ -107,10 +123,13 @@ x_912467_klf.GroupUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-29 14:22:17</sys_created_on>
         <sys_id>1a22433f97206550b2e1f97e6253af22</sys_id>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>GroupUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy/>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1a22433f97206550b2e1f97e6253af22</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-02-20 21:05:48</sys_updated_on>
     </sys_script_include>
 </record_update>
