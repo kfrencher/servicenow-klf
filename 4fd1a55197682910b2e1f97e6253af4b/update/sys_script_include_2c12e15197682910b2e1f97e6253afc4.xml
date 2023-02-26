@@ -13,7 +13,10 @@ var x_912467_klf = x_912467_klf || {};
  * @class x_snb_common.GlideRecordUtils
  * contains utility functions
  */
-x_912467_klf.GlideRecordUtils = (function() {
+x_912467_klf.GlideRecordUtils = (function () {
+
+    var globalGlideRecordUtils = new global.KLF_GlideRecordUtils();
+
     return {
         /**
          * Quickly retrieve a GlideRecord by sys_id
@@ -21,7 +24,7 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {string} tableName
          * @returns {?GlideRecord} Found GlideRecord or null
          */
-        getRecord: function(sysld, tableName) {
+        getRecord: function (sysld, tableName) {
             var record = new GlideRecord(tableName);
             if (record.get(sysld)) {
                 return record;
@@ -34,7 +37,7 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {GlideRecord} glideRecord A GlideRecord that uses extension
          * @returns {GlideRecord} The extended GlideRecord
          */
-        getExtendedGlideRecord: function(glideRecord) {
+        getExtendedGlideRecord: function (glideRecord) {
             if (glideRecord.getTableName() != glideRecord.getRecordClassName()) {
                 var extended = new GlideRecord(glideRecord.getRecordClassName());
                 extended.get(glideRecord.getUniqueValue());
@@ -49,9 +52,9 @@ x_912467_klf.GlideRecordUtils = (function() {
          * for a field
          * @param {string} tableName
          * @param {string} fieldName
-         * @returns {object}
+         * @returns {?Object.<string,string>}
          */
-        getFieldLabel: function(tableName, fieldName) {
+        getFieldLabel: function (tableName, fieldName) {
             var label = new GlideRecord('sys_documentation');
             label.addQuery('name', tableName);
             label.addQuery('element', fieldName);
@@ -60,7 +63,7 @@ x_912467_klf.GlideRecordUtils = (function() {
                 throw 'Found more than one label for the field' + tableName + '.' + fieldName;
             }
             if (label.next()) {
-                return this.glideRecordToMap(label);
+                return globalGlideRecordUtils.glideRecordToMap(label);
             } else {
                 return null;
             }
@@ -70,7 +73,7 @@ x_912467_klf.GlideRecordUtils = (function() {
          * the parent table name instead of the child table name if GlideRecord.getTableName is used
          * @param {GlideRecord} glideRecord GlideRecord to retrieve true table name for
          */
-        getTableName: function(glideRecord) {
+        getTableName: function (glideRecord) {
             return (glideRecord.sys_class_name && !glideRecord.sys_class_name.nil()) ?
                 glideRecord.getValue('sys_class_name') :
                 glideRecord.getTableName();
@@ -82,7 +85,7 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {string} tableName The name of a child table to see if it extends the ancestor
          * @returns {boolean}
          */
-        extendsTable: function(superTableName, tableName) {
+        extendsTable: function (superTableName, tableName) {
             if (superTableName == tableName) {
                 return true;
             }
@@ -107,8 +110,8 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {string} tableName Table name to retrieve fields
          * @returns {string[]}
          */
-        getTableFieldNames: function(tableName) {
-            return new GlideRecord(tableName).getElements().map(function(element) {
+        getTableFieldNames: function (tableName) {
+            return new GlideRecord(tableName).getElements().map(function (element) {
                 return element.getName();
             });
         },
@@ -119,14 +122,14 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {string} extendedTable The extended table name that extends the base table
          * @returns {string[]} A list of field names that are in the extended table that are not in the base table
          */
-        getOnlyExtendedFields: function(baseTable, extendedTable) {
+        getOnlyExtendedFields: function (baseTable, extendedTable) {
             /**
              * Returns the list of field names for a glide record
              * @param {GlideRecord} glideRecord
              * @returns {string[]}
              */
             function getFields(glideRecord) {
-                return glideRecord.getElements().map(function(element) {
+                return glideRecord.getElements().map(function (/**@type{GlideElement}*/element) {
                     return element.getName();
                 });
             }
@@ -141,8 +144,9 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {GlideRecord} glideRecord Glide record to retrieve url
          * @param {string} portalUrl The base portal URL
          * @param {string} formPage The ServicePortal form page id to go to
+         * @returns {string}
          */
-        getRecordUrl: function(glideRecord, portalUrl, formPage) {
+        getRecordUrl: function (glideRecord, portalUrl, formPage) {
             return portalUrl + '?' +
                 'id=' + formPage +
                 '&table=' + glideRecord.getTableName() +
@@ -157,7 +161,7 @@ x_912467_klf.GlideRecordUtils = (function() {
          * @param {string} label Label for the link the user sees
          * @returns {string}
          */
-        getRecordHtmllink: function(glideRecord, portalUrl, formPage, label) {
+        getRecordHtmllink: function (glideRecord, portalUrl, formPage, label) {
             return '<a href="' + this.getRecordUrl(glideRecord, portalUrl, formPage) + '">' + label + '</a>';
         }
     };
@@ -166,13 +170,13 @@ x_912467_klf.GlideRecordUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:49</sys_created_on>
         <sys_id>2c12e15197682910b2e1f97e6253afc4</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>GlideRecordUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_2c12e15197682910b2e1f97e6253afc4</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-02-20 21:04:54</sys_updated_on>
+        <sys_updated_on>2023-02-25 17:46:43</sys_updated_on>
     </sys_script_include>
 </record_update>

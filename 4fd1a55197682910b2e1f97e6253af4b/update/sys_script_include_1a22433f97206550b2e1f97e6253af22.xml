@@ -43,7 +43,7 @@ x_912467_klf.GroupUtils = (function() {
             gr.addQuery('user', userSysId);
             gr.query();
             const groupSysIds = [];
-            while(gr.next()) {
+            while (gr.next()) {
                 groupSysIds.push(gr.group.toString());
             }
             return groupSysIds;
@@ -56,7 +56,7 @@ x_912467_klf.GroupUtils = (function() {
          */
         getGroupByName(groupName) {
             const group = new GlideRecord('sys_user_group');
-            if(group.get('name', groupName)) {
+            if (group.get('name', groupName)) {
                 return group;
             } else {
                 return null;
@@ -93,6 +93,7 @@ x_912467_klf.GroupUtils = (function() {
         /**
          * Creates a new sys_user record
          * @param {string} userName - The name of the user to create
+         * @returns {GlideRecord} 
          */
         createUser(userName) {
             return glideRecordUtils.insertRecord('sys_user', {
@@ -123,13 +124,13 @@ x_912467_klf.GroupUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-29 14:22:17</sys_created_on>
         <sys_id>1a22433f97206550b2e1f97e6253af22</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>GroupUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy/>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1a22433f97206550b2e1f97e6253af22</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-02-20 21:05:48</sys_updated_on>
+        <sys_updated_on>2023-02-25 20:08:36</sys_updated_on>
     </sys_script_include>
 </record_update>
