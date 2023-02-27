@@ -7,7 +7,7 @@
         <client_callable>false</client_callable>
         <description/>
         <name>CalendarCreator</name>
-        <script><![CDATA[//@ts-ignore
+        <script><![CDATA[//@ts-ignore -- I know this throws an error, but it allows VSCode to autocomplete the methods
 var x_912467_klf = x_912467_klf || {};
 
 x_912467_klf.CalendarCreator = (function () {
@@ -200,7 +200,7 @@ x_912467_klf.CalendarCreator = (function () {
                 return yearSpanName;
             } else {
                 throw 'Could not find year name using calendar: ' +
-                calendar.getDisplayValue() + ' and year: ' + year;
+                    calendar.getDisplayValue() + ' and year: ' + year;
             }
         },
         /** 
@@ -278,13 +278,13 @@ x_912467_klf.CalendarCreator = (function () {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:11</sys_created_on>
         <sys_id>52e1695197682910b2e1f97e6253aff9</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>CalendarCreator</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_52e1695197682910b2e1f97e6253aff9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-02-25 17:45:09</sys_updated_on>
+        <sys_updated_on>2023-02-27 02:54:18</sys_updated_on>
     </sys_script_include>
 </record_update>
