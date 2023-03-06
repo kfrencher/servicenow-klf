@@ -10,7 +10,7 @@
         <script><![CDATA[//@ts-ignore -- I know this throws an error, but it allows VSCode to autocomplete the methods
 var x_912467_klf = x_912467_klf || {};
 
-x_912467_klf.CalendarCreator = (function () {
+x_912467_klf.CalendarCreator = (function() {
     return {
         fiscalQuarterCalendarName: 'Fiscal Quarter',
         /**
@@ -18,7 +18,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {string} calendarName
          * @returns {GlideRecord} business_calendar
          */
-        getCalendarByName: function (calendarName) {
+        getCalendarByName: function(calendarName) {
             var calender = new GlideRecord('business_calendar');
             if (calender.get('calendar_name', calendarName)) {
                 return calender;
@@ -32,7 +32,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {GlideRecord} business_calendar_span_name
          */
-        getQuarterSpanName: function (quarterName, year) {
+        getQuarterSpanName: function(quarterName, year) {
             var calendar = this.getCalendarByName(this.fiscalQuarterCalendarName);
             var quarter = new GlideRecord('business_calendar_span_name');
             quarter.addQuery('calendar', calendar.getUniqueValue());
@@ -51,7 +51,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {[string,string]} A pair representing the start and end date
          */
-        getQuarterDateRange: function (quarterName, year) {
+        getQuarterDateRange: function(quarterName, year) {
             if (quarterName == 'Ql') {
                 return [year - 1 + '-10-01 00:00:00', year + '-01-01 00:00:00'];
             } else if (quarterName == 'Q2') {
@@ -71,7 +71,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {GlideRecord} a persisted business_calendar_span
          */
-        createQuarter: function (quarterName, year) {
+        createQuarter: function(quarterName, year) {
             var calendarSysId = this.getCalendarByName(this.fiscalQuarterCalendarName).getUniqueValue();
             var spanNameSysId = this.getQuarterSpanName(quarterName, year).getUniqueValue();
             var calendarSpan = new GlideRecord('business_calendar_span');
@@ -96,7 +96,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {[GlideRecord, GlideRecord, GlideRecord, GlideRecord]} the four fiscal quarters business_calendar_span
          */
-        createFiscalYearByQuarters: function (year) {
+        createFiscalYearByQuarters: function(year) {
             return [
                 this.createQuarter('Ql', year),
                 this.createQuarter('Q2', year),
@@ -110,7 +110,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} startYear
          * @param {number} endYear
          */
-        createFiscalQuarterEntries: function (startYear, endYear) {
+        createFiscalQuarterEntries: function(startYear, endYear) {
             for (var year = startYear; year <= endYear; year++) {
                 this.createFiscalYearByQuarters(year);
             }
@@ -120,7 +120,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} startYear
          * @param {number} endYear
          */
-        createFiscalQuarterNameEntries: function (startYear, endYear) {
+        createFiscalQuarterNameEntries: function(startYear, endYear) {
             for (var year = startYear; year <= endYear; year++) {
                 this.createFiscalQuartersNameEntriesByYear(year);
             }
@@ -133,7 +133,7 @@ x_912467_klf.CalendarCreator = (function () {
         * @returns {[GlideRecord, GlideRecord, GlideRecord, GlideRecord]}
         the four fiscal quarters business_calendar_span
         */
-        createFiscalQuartersNameEntriesByYear: function (year) {
+        createFiscalQuartersNameEntriesByYear: function(year) {
             return [
                 this.createFiscalQuarterName('Ql', year),
                 this.createFiscalQuarterName('Q2', year),
@@ -147,7 +147,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {string}
          */
-        getFiscalQuarterSpanNameShortName: function (quarter, year) {
+        getFiscalQuarterSpanNameShortName: function(quarter, year) {
             return year + ' ' + quarter;
         },
         /**
@@ -155,7 +155,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {string} quarter
          * @param {number} year
          */
-        createFiscalQuarterName: function (quarter, year) {
+        createFiscalQuarterName: function(quarter, year) {
             var calendarSysId = this.getCalendarByName(this.fiscalQuarterCalendarName).getUniqueValue();
             var spanName = new GlideRecord('business_calendar_span_name');
             var shortName = this.getFiscalQuarterSpanNameShortName(quarter, year);
@@ -181,7 +181,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {[string,string]} A pair representing the start and end
          */
-        getYearDateRange: function (year) {
+        getYearDateRange: function(year) {
             return [year - 1 + '-10-01 00:00:00', year + '-10-01'];
         },
 
@@ -190,7 +190,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {GlideRecord} business_calendar_span_name
          */
-        getYearSpanName: function (year) {
+        getYearSpanName: function(year) {
             var calendar = this.getCalendarByName(this.fiscalYearCalendarName);
             var yearSpanName = new GlideRecord('business_calendar_span_name');
             yearSpanName.addQuery('calendar', calendar.getUniqueValue());
@@ -209,7 +209,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {GlideRecord} a persisted business_calendar_span
          */
-        createYear: function (year) {
+        createYear: function(year) {
             var calendarSysId = this.getCalendarByName(this.fiscalYearCalendarName).getUniqueValue();
             var spanNameSysId = this.getYearSpanName(year).getUniqueValue();
             var calendarSpan = new GlideRecord('business_calendar_span');
@@ -234,7 +234,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} startYear
          * @param {number} endYear
          */
-        createFiscalYearEntries: function (startYear, endYear) {
+        createFiscalYearEntries: function(startYear, endYear) {
             for (var year = startYear; year <= endYear; year++) {
                 this.createYear(year);
             }
@@ -244,7 +244,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} startYear
          * @param {number} endYear
          */
-        createFiscalYearNameEntries: function (startYear, endYear) {
+        createFiscalYearNameEntries: function(startYear, endYear) {
             for (var year = startYear; year <= endYear; year++) {
                 this.createFiscalYearName(year);
             }
@@ -254,7 +254,7 @@ x_912467_klf.CalendarCreator = (function () {
          * @param {number} year
          * @returns {GlideRecord}
          */
-        createFiscalYearName: function (year) {
+        createFiscalYearName: function(year) {
             var calendarSysId = this.getCalendarByName(this.fiscalYearCalendarName).getUniqueValue();
             var spanName = new GlideRecord('business_calendar_span_name');
             /**@ts-ignore */
@@ -278,13 +278,13 @@ x_912467_klf.CalendarCreator = (function () {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:11</sys_created_on>
         <sys_id>52e1695197682910b2e1f97e6253aff9</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>4</sys_mod_count>
         <sys_name>CalendarCreator</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_52e1695197682910b2e1f97e6253aff9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-02-27 02:54:18</sys_updated_on>
+        <sys_updated_on>2023-03-04 14:42:47</sys_updated_on>
     </sys_script_include>
 </record_update>
