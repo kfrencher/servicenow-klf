@@ -7,14 +7,18 @@
         </input_filter>
         <name>KLF</name>
         <parent/>
+        <sn_atf_tg_generated>false</sn_atf_tg_generated>
         <sys_class_name>sys_atf_test_suite</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-29 16:03:30</sys_created_on>
         <sys_id>4239d7f797a06550b2e1f97e6253af03</sys_id>
+        <sys_mod_count>0</sys_mod_count>
         <sys_name>KLF</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy/>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_atf_test_suite_4239d7f797a06550b2e1f97e6253af03</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-04-12 12:03:35</sys_updated_on>
     </sys_atf_test_suite>
 </record_update>

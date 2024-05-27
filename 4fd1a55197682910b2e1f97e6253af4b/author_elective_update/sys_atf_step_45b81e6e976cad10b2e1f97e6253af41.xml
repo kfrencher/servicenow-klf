@@ -129,6 +129,7 @@ See the documentation for Test Design Considerations</warning_message></sys_atf_
         <sys_db_object display_value="" name="sys_atf_step">sys_atf_step</sys_db_object>
         <sys_id>c4c13afc6e0f414b9625a13c3fba7b59</sys_id>
         <sys_metadata>45b81e6e976cad10b2e1f97e6253af41</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
         <sys_name>Record Insert</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_parent/>
@@ -137,5 +138,7 @@ See the documentation for Test Design Considerations</warning_message></sys_atf_
         <sys_scope_delete display_value="">0549564ff37b46c085efa585718ebfe4</sys_scope_delete>
         <sys_update_name>sys_atf_step_45b81e6e976cad10b2e1f97e6253af41</sys_update_name>
         <sys_update_version display_value="sys_atf_step_45b81e6e976cad10b2e1f97e6253af41">4c895eae976cad10b2e1f97e6253af1c</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-04-12 12:03:36</sys_updated_on>
     </sys_metadata_delete>
 </record_update>

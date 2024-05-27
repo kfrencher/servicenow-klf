@@ -262,6 +262,7 @@ x_912467_klf.TestUtils = (function() {
         <sys_db_object display_value="" name="sys_script_include">sys_script_include</sys_db_object>
         <sys_id>014fedc508e640c29596275c7a4c48c1</sys_id>
         <sys_metadata>6d38d66a976cad10b2e1f97e6253afa0</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
         <sys_name>TestUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_parent/>
@@ -270,5 +271,7 @@ x_912467_klf.TestUtils = (function() {
         <sys_scope_delete display_value="">0549564ff37b46c085efa585718ebfe4</sys_scope_delete>
         <sys_update_name>sys_script_include_6d38d66a976cad10b2e1f97e6253afa0</sys_update_name>
         <sys_update_version display_value="sys_script_include_6d38d66a976cad10b2e1f97e6253afa0">dfb2572b97ace150b2e1f97e6253af9a</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-04-12 12:03:37</sys_updated_on>
     </sys_metadata_delete>
 </record_update>

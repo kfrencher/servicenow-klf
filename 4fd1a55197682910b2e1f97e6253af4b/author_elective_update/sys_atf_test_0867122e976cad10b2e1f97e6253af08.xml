@@ -55,6 +55,7 @@
         <sys_db_object display_value="" name="sys_atf_test">sys_atf_test</sys_db_object>
         <sys_id>0fbfb8977f9d4b169251c6b76e301341</sys_id>
         <sys_metadata>0867122e976cad10b2e1f97e6253af08</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
         <sys_name>TestUtilsTest</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_parent/>
@@ -63,5 +64,7 @@
         <sys_scope_delete display_value="">0549564ff37b46c085efa585718ebfe4</sys_scope_delete>
         <sys_update_name>sys_atf_test_0867122e976cad10b2e1f97e6253af08</sys_update_name>
         <sys_update_version display_value="sys_atf_test_0867122e976cad10b2e1f97e6253af08">eff2bd6797e4e150b2e1f97e6253afa0</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-04-12 12:03:37</sys_updated_on>
     </sys_metadata_delete>
 </record_update>
