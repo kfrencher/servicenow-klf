@@ -38,4 +38,15 @@ some information that is stored on the sys_documentation record
 
 # GroupUtils
 
+Utility functions for Group (sys_user_group) table
+
+Some of the functions include:
+- isMemberOfSomeGroup: Returns true if the user is a member of any of the groups
+- getGroupSysIdsForUser: Returns the list of sys_user_group.sys_id for the user
+- getGroupByName: Returns the sys_user_group record with the given name
+- isMemberOf: Returns true is the user is a member of the sys_user_group
+- createGroup: Creates a new sys_user_group record   
+- createUser: Creates a new sys_user record
+- addUserToGroup: Adds a user to a group
+
 # ListMetric
