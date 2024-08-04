@@ -7,13 +7,27 @@
         <client_callable>false</client_callable>
         <description/>
         <name>GlideRecordUtils</name>
-        <script><![CDATA[//@ts-ignore
+        <script><![CDATA[/**
+ * Exposes some general methods for working with GlideRecords
+ * 
+ * Some of the methods are:
+ * - getRecord: Quickly retrieve a GlideRecord or null by sys_id
+ * - getExtendedGlideRecord: Some GlideRecords are extended tables. This method will always return the extended GlideRecord
+ * even if the passed in GlideRecord is the parent table
+ * - getFieldLabel: Returns the sys_documentation label associated with a field. This can be useful if you want to get
+ * some information that is stored on the sys_documentation record
+ * - extendsTable: Returns whether or not a child table extends an ancestor table
+ * - getRecordUrl: Returns the ServicePortal form URL
+ * - getRecordHtmllink: Returns HTML anchor link to the ServicePortal form
+ */
+
+//@ts-ignore
 var x_912467_klf = x_912467_klf || {};
 /**
  * @class x_snb_common.GlideRecordUtils
  * contains utility functions
  */
-x_912467_klf.GlideRecordUtils = (function () {
+x_912467_klf.GlideRecordUtils = (function() {
 
     var globalGlideRecordUtils = new global.KLF_GlideRecordUtils();
 
@@ -24,7 +38,7 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} tableName
          * @returns {?GlideRecord} Found GlideRecord or null
          */
-        getRecord: function (sysld, tableName) {
+        getRecord: function(sysld, tableName) {
             var record = new GlideRecord(tableName);
             if (record.get(sysld)) {
                 return record;
@@ -33,11 +47,12 @@ x_912467_klf.GlideRecordUtils = (function () {
             }
         },
         /**
-         * Checks to see if the provided GlideRecord is a new record through various mechanisms
+         * Some GlideRecords are extended tables. This method will always return the extended GlideRecord
+         * even if the passed in GlideRecord is the parent table
          * @param {GlideRecord} glideRecord A GlideRecord that uses extension
          * @returns {GlideRecord} The extended GlideRecord
          */
-        getExtendedGlideRecord: function (glideRecord) {
+        getExtendedGlideRecord: function(glideRecord) {
             if (glideRecord.getTableName() != glideRecord.getRecordClassName()) {
                 var extended = new GlideRecord(glideRecord.getRecordClassName());
                 extended.get(glideRecord.getUniqueValue());
@@ -54,7 +69,7 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} fieldName
          * @returns {?Object.<string,string>}
          */
-        getFieldLabel: function (tableName, fieldName) {
+        getFieldLabel: function(tableName, fieldName) {
             var label = new GlideRecord('sys_documentation');
             label.addQuery('name', tableName);
             label.addQuery('element', fieldName);
@@ -73,7 +88,7 @@ x_912467_klf.GlideRecordUtils = (function () {
          * the parent table name instead of the child table name if GlideRecord.getTableName is used
          * @param {GlideRecord} glideRecord GlideRecord to retrieve true table name for
          */
-        getTableName: function (glideRecord) {
+        getTableName: function(glideRecord) {
             return (glideRecord.sys_class_name && !glideRecord.sys_class_name.nil()) ?
                 glideRecord.getValue('sys_class_name') :
                 glideRecord.getTableName();
@@ -85,7 +100,7 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} tableName The name of a child table to see if it extends the ancestor
          * @returns {boolean}
          */
-        extendsTable: function (superTableName, tableName) {
+        extendsTable: function(superTableName, tableName) {
             if (superTableName == tableName) {
                 return true;
             }
@@ -110,8 +125,8 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} tableName Table name to retrieve fields
          * @returns {string[]}
          */
-        getTableFieldNames: function (tableName) {
-            return new GlideRecord(tableName).getElements().map(function (element) {
+        getTableFieldNames: function(tableName) {
+            return new GlideRecord(tableName).getElements().map(function(element) {
                 return element.getName();
             });
         },
@@ -122,14 +137,14 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} extendedTable The extended table name that extends the base table
          * @returns {string[]} A list of field names that are in the extended table that are not in the base table
          */
-        getOnlyExtendedFields: function (baseTable, extendedTable) {
+        getOnlyExtendedFields: function(baseTable, extendedTable) {
             /**
              * Returns the list of field names for a glide record
              * @param {GlideRecord} glideRecord
              * @returns {string[]}
              */
             function getFields(glideRecord) {
-                return glideRecord.getElements().map(function (/**@type{GlideElement}*/element) {
+                return glideRecord.getElements().map(function( /**@type{GlideElement}*/ element) {
                     return element.getName();
                 });
             }
@@ -146,7 +161,7 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} formPage The ServicePortal form page id to go to
          * @returns {string}
          */
-        getRecordUrl: function (glideRecord, portalUrl, formPage) {
+        getRecordUrl: function(glideRecord, portalUrl, formPage) {
             return portalUrl + '?' +
                 'id=' + formPage +
                 '&table=' + glideRecord.getTableName() +
@@ -161,8 +176,54 @@ x_912467_klf.GlideRecordUtils = (function () {
          * @param {string} label Label for the link the user sees
          * @returns {string}
          */
-        getRecordHtmllink: function (glideRecord, portalUrl, formPage, label) {
+        getRecordHtmllink: function(glideRecord, portalUrl, formPage, label) {
             return '<a href="' + this.getRecordUrl(glideRecord, portalUrl, formPage) + '">' + label + '</a>';
+        },
+
+        // Write your scripts here to run (JavaScript executed on server)
+        /**
+         * Returns a list of field names that have changed on the GlideRecord
+         * Filters out sys_ fields
+         * When this is an insert operation, all fields that are not empty are considered changed
+         * @param {GlideRecord} glideRecord 
+         * @returns {string[]}
+         */
+        getChangedFieldNames: function(glideRecord) {
+            return this.getChanges(glideRecord).map(function(element) {
+                return element.getName();
+            });
+        },
+
+        /**
+         * Returns a list of GlideElement objects that have changed on the GlideRecord
+         * Filters out sys_ fields and fields that have not changed
+         * When this is an insert operation, all fields that are not empty are considered changed
+         * @param {GlideRecord} glideRecord 
+         * @returns {GlideElement[]}
+         */
+        getChanges: function(glideRecord) {
+            /** @type {GlideElement[]} */
+            var elements = glideRecord.getElements();
+
+            // Filter out sys_ fields
+            var filteredElements = elements.filter(function(element) {
+                var name = element.getName();
+                return !name.startsWith("sys_") || name == "sys_domain";
+            });
+
+            if (glideRecord.operation() == "insert") {
+                // On an insert operation, all fields that are not empty are considered changed
+                filteredElements = filteredElements.filter(function(element) {
+                    return !element.nil();
+                });
+            } else {
+                // On an update operation, only fields that have changed are considered changed
+                filteredElements = filteredElements.filter(function(element) {
+                    return element.changes();
+                });
+            }
+
+            return filteredElements;
         }
     };
 })();]]></script>
@@ -170,13 +231,13 @@ x_912467_klf.GlideRecordUtils = (function () {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:49</sys_created_on>
         <sys_id>2c12e15197682910b2e1f97e6253afc4</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>8</sys_mod_count>
         <sys_name>GlideRecordUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_2c12e15197682910b2e1f97e6253afc4</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-02-25 17:46:43</sys_updated_on>
+        <sys_updated_on>2024-08-04 18:08:16</sys_updated_on>
     </sys_script_include>
 </record_update>

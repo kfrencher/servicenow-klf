@@ -7,7 +7,19 @@
         <client_callable>false</client_callable>
         <description/>
         <name>GroupUtils</name>
-        <script><![CDATA[//@ts-ignore
+        <script><![CDATA[/**
+ * Utility functions for Group (sys_user_group) table
+ * 
+ * Some of the functions include:
+ * - isMemberOfSomeGroup: Returns true if the user is a member of any of the groups
+ * - getGroupSysIdsForUser: Returns the list of sys_user_group.sys_id for the user
+ * - getGroupByName: Returns the sys_user_group record with the given name
+ * - isMemberOf: Returns true is the user is a member of the sys_user_group
+ * - createGroup: Creates a new sys_user_group record   
+ * - createUser: Creates a new sys_user record
+ * - addUserToGroup: Adds a user to a group
+ */
+//@ts-ignore
 var x_912467_klf = x_912467_klf || {};
 
 /**
@@ -124,13 +136,13 @@ x_912467_klf.GroupUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-29 14:22:17</sys_created_on>
         <sys_id>1a22433f97206550b2e1f97e6253af22</sys_id>
-        <sys_mod_count>12</sys_mod_count>
+        <sys_mod_count>13</sys_mod_count>
         <sys_name>GroupUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy/>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1a22433f97206550b2e1f97e6253af22</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-03-09 01:14:32</sys_updated_on>
+        <sys_updated_on>2024-08-04 14:29:51</sys_updated_on>
     </sys_script_include>
 </record_update>

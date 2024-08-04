@@ -7,7 +7,16 @@
         <client_callable>false</client_callable>
         <description/>
         <name>DateUtils</name>
-        <script><![CDATA[//@ts-ignore
+        <script><![CDATA[/**
+ * Utility object for date-related operations. This object is particularly useful for
+ * getting information related to the Federal Government's fiscal year.
+ * 
+ * Functions such as getFiscalYear, getCurrentFiscalYear, getFiscalYearStartDate.
+ * 
+ * As well as doing calculations based on business days such as addBusinessDaysToDate.
+ */
+
+//@ts-ignore
 var x_912467_klf = x_912467_klf || {};
 /**
  * @class x_snb_common.DateUtils
@@ -151,13 +160,13 @@ x_912467_klf.DateUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:31</sys_created_on>
         <sys_id>1402e95197682910b2e1f97e6253af2d</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>5</sys_mod_count>
         <sys_name>DateUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1402e95197682910b2e1f97e6253af2d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-02-23 02:21:57</sys_updated_on>
+        <sys_updated_on>2024-08-04 08:08:21</sys_updated_on>
     </sys_script_include>
 </record_update>

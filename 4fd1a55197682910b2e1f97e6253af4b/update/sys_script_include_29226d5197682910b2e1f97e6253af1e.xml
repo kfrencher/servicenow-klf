@@ -7,7 +7,31 @@
         <client_callable>false</client_callable>
         <description/>
         <name>ListMetric</name>
-        <script><![CDATA[//@ts-ignore
+        <script><![CDATA[/**
+ * Helps to produce a metric based on the "List" field in ServiceNow. Metrics are located in the "Metrics" module.
+ * 
+ * It can be difficult to report on a list field in ServiceNow because the list values are aggregated into a single field.
+ * 
+ * This script helps to produce a metric based on the list field. A metric instance will be produced for each value in the
+ * list field. This way you can create a report based on the individual values instead of the aggregated field.
+ * 
+ * Metrics are documented at {@link https://docs.servicenow.com/csh?topicname=c_MetricDefinitionSupport.html&version=latest}
+ * 
+ * NOTE: to produce metrics on tables that do not extend Task, you will need to duplicate the "metrics events" business rule that
+ * sits on the Task table. That business rule is responsible for creating the metric instances. Duplicate the business rule and
+ * change the table name to the table you want to produce metrics on.
+ * 
+ * When you duplicate the business rule, you will need to call the "queueMetricUpdate" function from the "onAfter" business rule.
+ * The default "queueMetricUpdate" function can only be called from "global" scope. I have created a version of this function
+ * in the KLF Global application called "KLF_MetricUtils.queueMetricUpdate" that can be called from the application scope. Refer to
+ * the KLF_MetricUtils script include for more information.
+ * 
+ * @example
+ * // Create a Metric Definition
+ * // In the "Script" field of the definition add the following script:
+ * x_912467_klf.ListMetric.createMetric(current, definition);
+ */
+//@ts-ignore
 var x_912467_klf = x_912467_klf || {};
 
 x_912467_klf.ListMetric = (function() {
@@ -49,6 +73,8 @@ x_912467_klf.ListMetric = (function() {
 
     return {
         /**
+         * Creates a metric instance for each value in the list field. 
+         * If the list field is empty, all metric instances will be deleted.
          * @param {GlideRecord} glideRecord 
          * @param {GlideRecord} metricDefinition 
          */
@@ -61,7 +87,7 @@ x_912467_klf.ListMetric = (function() {
                 var removedValues = new global.ArrayUtil().diff(savedValues, values);
                 values.forEach(function(value) {
                     if (!exists(glideRecord.getUniqueValue(), fieldName, value)) {
-                        var mi = new global.MetricUtils().createMetricInstance(glideRecord, metricDefinition);
+                        var mi = new global.KLF_MetricUtils().createMetricInstance(glideRecord, metricDefinition);
                         mi.value = value;
                         mi.update();
                     }
@@ -91,13 +117,13 @@ x_912467_klf.ListMetric = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:58:10</sys_created_on>
         <sys_id>29226d5197682910b2e1f97e6253af1e</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>12</sys_mod_count>
         <sys_name>ListMetric</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_29226d5197682910b2e1f97e6253af1e</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2023-03-09 00:58:46</sys_updated_on>
+        <sys_updated_on>2024-08-04 18:14:34</sys_updated_on>
     </sys_script_include>
 </record_update>

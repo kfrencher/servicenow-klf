@@ -7,50 +7,64 @@
         <client_callable>false</client_callable>
         <description/>
         <name>Evaluator</name>
-        <script><![CDATA[//@ts-ignore
+        <script><![CDATA[/**
+ * Script that exposes an eval function for scoped applications.
+ * GlideEvaluator.eval is not available in scoped applications.
+ * This script gives an alternative way to execute a script given as a string dynamically.
+ * 
+ */
+//@ts-ignore
 var x_912467_klf = x_912467_klf || {};
 /**
  * @class x_snb_common.Evaluator
  * Eval function for scoped apps because you can't execute
  * GlideEvaluator.eval from scoped application
+ * @example
+ * var script = 'gs.info("Hello World")';
+ * x_912467_klfx_snb_common.Evaluator.evaluate(script);
  */
-x_912467_klf.Evaluator = (function () {
+x_912467_klf.Evaluator = (function() {
 
-	function getFixScript() {
-		var fixScriptName = 'KLF Script Eval';
-		var fixScript = new GlideRecord('sys_script_fix');
-		if(!fixScript.get('name', fixScriptName)) {
-			fixScript.newRecord();
-			fixScript.record_for_rollback = false;
-			fixScript.description = 'Created automatically by x_912467_klf.Evaluator to dynamically execute scripts. ' +
-				'ServiceNow does not allow GlideEvaluator.eval from scoped applications. ' +
-				'I am using a fix script to execute dynamic scripts. The script field is left intentionally blank.';
-			fixScript.name = fixScriptName;
-			fixScript.update();
-		}
-		return fixScript;
-	}
+    function getFixScript() {
+        var fixScriptName = 'KLF Script Eval';
+        var fixScript = new GlideRecord('sys_script_fix');
+        if (!fixScript.get('name', fixScriptName)) {
+            fixScript.newRecord();
+            fixScript.record_for_rollback = false;
+            fixScript.description = 'Created automatically by x_912467_klf.Evaluator to dynamically execute scripts. ' +
+                'ServiceNow does not allow GlideEvaluator.eval from scoped applications. ' +
+                'I am using a fix script to execute dynamic scripts. The script field is left intentionally blank.';
+            fixScript.name = fixScriptName;
+            fixScript.update();
+        }
+        return fixScript;
+    }
 
     return {
-		evaluate: function(script) {
-			var fixScript = getFixScript();
-			fixScript.script = script;
-			return new GlideScopedEvaluator().evaluateScript(fixScript);
-		}
-	};
+        /**
+         * @param {string} script 
+         * @returns {any}
+         */
+        evaluate: function(script) {
+            var fixScript = getFixScript();
+            fixScript.script = script;
+            // @ts-ignore
+            return new GlideScopedEvaluator().evaluateScript(fixScript);
+        }
+    };
 
 })();]]></script>
         <sys_class_name>sys_script_include</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2024-04-08 21:46:31</sys_created_on>
         <sys_id>cee1740497a1ca1024d7b066f053af60</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>Evaluator</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_cee1740497a1ca1024d7b066f053af60</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2024-04-08 21:49:45</sys_updated_on>
+        <sys_updated_on>2024-08-04 14:52:59</sys_updated_on>
     </sys_script_include>
 </record_update>
