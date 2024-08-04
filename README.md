@@ -24,6 +24,18 @@ This script gives an alternative way to execute a script given as a string dynam
 
 # GlideRecordUtils
 
+Exposes some general methods for working with GlideRecords
+
+Some of the methods are:
+- getRecord: Quickly retrieve a GlideRecord or null by sys_id
+- getExtendedGlideRecord: Some GlideRecords are extended tables. This method will always return the extended GlideRecord
+even if the passed in GlideRecord is the parent table
+- getFieldLabel: Returns the sys_documentation label associated with a field. This can be useful if you want to get
+some information that is stored on the sys_documentation record
+- extendsTable: Returns whether or not a child table extends an ancestor table
+- getRecordUrl: Returns the ServicePortal form URL
+- getRecordHtmllink: Returns HTML anchor link to the ServicePortal form
+
 # GroupUtils
 
 # ListMetric
