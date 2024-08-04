@@ -18,6 +18,10 @@ As well as doing calculations based on business days such as addBusinessDaysToDa
 
 # Evaluator
 
+Script that exposes an `eval` function for scoped applications.
+`GlideEvaluator.eval` is not available in scoped applications.
+This script gives an alternative way to execute a script given as a string dynamically.
+
 # GlideRecordUtils
 
 # GroupUtils
