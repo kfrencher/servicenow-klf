@@ -56,3 +56,29 @@ Some of the functions include:
 - addUserToGroup: Adds a user to a group
 
 # ListMetric
+
+Helps to produce a metric based on the "List" field in ServiceNow. Metrics are located in the "Metrics" module.
+
+It can be difficult to report on a list field in ServiceNow because the list values are aggregated into a single field.
+
+This script helps to produce a metric based on the list field. A metric instance will be produced for each value in the
+list field. This way you can create a report based on the individual values instead of the aggregated field.
+
+Metrics are documented at [Metrics](https://docs.servicenow.com/csh?topicname=c_MetricDefinitionSupport.html&version=latest) in the
+ServiceNow docs site.
+
+> NOTE: to produce metrics on tables that do not extend Task, you will need to duplicate the "metrics events" business rule that
+sits on the Task table. That business rule is responsible for creating the metric instances. Duplicate the business rule and
+change the table name to the table you want to produce metrics on.
+
+> When you duplicate the business rule, you will need to call the "queueMetricUpdate" function from the "onAfter" business rule.
+The default "queueMetricUpdate" function can only be called from "global" scope. I have created a version of this function
+in the KLF Global application called "KLF_MetricUtils.queueMetricUpdate" that can be called from the application scope. Refer to
+the KLF_MetricUtils script include for more information.
+
+Example:
+```javascript
+// Create a Metric Definition
+// In the "Script" field of the definition add the following script:
+x_912467_klf.ListMetric.createMetric(current, definition);
+```
