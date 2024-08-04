@@ -22,6 +22,12 @@ Script that exposes an `eval` function for scoped applications.
 `GlideEvaluator.eval` is not available in scoped applications.
 This script gives an alternative way to execute a script given as a string dynamically.
 
+Example:
+```javascript
+ var script = 'gs.info("Hello World")';
+ x_912467_klfx_snb_common.Evaluator.evaluate(script);
+```
+
 # GlideRecordUtils
 
 Exposes some general methods for working with GlideRecords
