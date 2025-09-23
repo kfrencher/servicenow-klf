@@ -6,7 +6,9 @@
         <caller_access/>
         <client_callable>false</client_callable>
         <description/>
+        <mobile_callable>false</mobile_callable>
         <name>Evaluator</name>
+        <sandbox_callable>false</sandbox_callable>
         <script><![CDATA[/**
  * Script that exposes an eval function for scoped applications.
  * GlideEvaluator.eval is not available in scoped applications.
@@ -43,13 +45,42 @@ x_912467_klf.Evaluator = (function() {
     return {
         /**
          * @param {string} script 
+         * @param {{[argumentName: string]: any}} argumentMap
          * @returns {any}
          */
-        evaluate: function(script) {
+        evaluate: function(script, argumentMap) {
+            argumentMap = argumentMap || {};
             var fixScript = getFixScript();
             fixScript.script = script;
+            var evaluator = new GlideScopedEvaluator();
+            Object.keys(argumentMap || {}).forEach(function(argName) {
+                var argValue = argumentMap[argName];
+                evaluator.putVariable(argName, argValue);
+            });
+
             // @ts-ignore
-            return new GlideScopedEvaluator().evaluateScript(fixScript);
+            return evaluator.evaluateScript(fixScript);
+        }, 
+        
+        /**
+         * Evaluates the given script as the system user by calling a Flow Designer subflow.
+         * 
+         * You can pass parameters to the script via the argumentMap object.
+         * Each key in the argumentMap will be available as a variable in the script.
+         * @example
+         * x_912467_klf.Evaluator.evaluateAsSystem('gs.info("Hello World")');
+         * x_912467_klf.Evaluator.evaluateAsSystem('gs.info(message)', {message: 'Message Hello World'});
+         * @param {string} script
+         * @param {{[parameterName:string]: any}} [argumentMap]
+         * @returns {any}
+         */
+        evaluateAsSystem: function(script, argumentMap) {
+            var result = sn_fd.FlowAPI.executeSubflow('x_912467_klf.execute_as_system', {
+                func: script,
+                argumentMap: argumentMap
+            });
+
+            return result.output;
         }
     };
 
@@ -58,13 +89,13 @@ x_912467_klf.Evaluator = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2024-04-08 21:46:31</sys_created_on>
         <sys_id>cee1740497a1ca1024d7b066f053af60</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>16</sys_mod_count>
         <sys_name>Evaluator</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_cee1740497a1ca1024d7b066f053af60</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2024-08-04 14:52:59</sys_updated_on>
+        <sys_updated_on>2025-09-23 14:00:16</sys_updated_on>
     </sys_script_include>
 </record_update>
