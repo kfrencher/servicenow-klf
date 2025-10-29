@@ -287,24 +287,28 @@ x_912467_klf.DateUtils = (function() {
 
             // Define federal holidays - these are recurring annual holidays
             // Based on https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/
+            /**
+             * @type {({name: string, month: number, day: number, type: 'fixed'} |
+             * {name: string, month: number, day: number, dayOfWeek: number, occurrence: number, referenceDate: string, type: 'floating'})[]}
+             */
             var holidays = [
-                { name: "New Year's Day", month: MONTH.JANUARY, day: 1 },
-                { name: "Birthday of Martin Luther King, Jr.", month: MONTH.JANUARY, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.THIRD, referenceDate: '2025-01-20' },
-                { name: "Washington's Birthday", month: MONTH.FEBRUARY, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.THIRD, referenceDate: '2025-02-17' },
-                { name: "Memorial Day", month: MONTH.MAY, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.LAST, referenceDate: '2025-05-26' },
-                { name: "Juneteenth National Independence Day", month: MONTH.JUNE, day: 19 },
-                { name: "Independence Day", month: MONTH.JULY, day: 4 },
-                { name: "Labor Day", month: MONTH.SEPTEMBER, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.FIRST, referenceDate: '2025-09-01'  },
-                { name: "Columbus Day", month: MONTH.OCTOBER, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.SECOND, referenceDate: '2025-10-13' },
-                { name: "Veterans Day", month: MONTH.NOVEMBER, day: 11 },
-                { name: "Thanksgiving Day", month: MONTH.NOVEMBER, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.THURSDAY, occurrence: WEEK_OCCURRENCE.FOURTH, referenceDate: '2025-11-27' },
-                { name: "Christmas Day", month: MONTH.DECEMBER, day: 25 }
+                { name: "New Year's Day", month: MONTH.JANUARY, day: 1, type: 'fixed' },
+                { name: "Birthday of Martin Luther King, Jr.", month: MONTH.JANUARY, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.THIRD, referenceDate: '2025-01-20', type: 'floating' },
+                { name: "Washington's Birthday", month: MONTH.FEBRUARY, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.THIRD, referenceDate: '2025-02-17', type: 'floating' },
+                { name: "Memorial Day", month: MONTH.MAY, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.LAST, referenceDate: '2025-05-26', type: 'floating' },
+                { name: "Juneteenth National Independence Day", month: MONTH.JUNE, day: 19, type: 'fixed' },
+                { name: "Independence Day", month: MONTH.JULY, day: 4, type: 'fixed' },
+                { name: "Labor Day", month: MONTH.SEPTEMBER, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.FIRST, referenceDate: '2025-09-01', type: 'floating' },
+                { name: "Columbus Day", month: MONTH.OCTOBER, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.MONDAY, occurrence: WEEK_OCCURRENCE.SECOND, referenceDate: '2025-10-13', type: 'floating' },
+                { name: "Veterans Day", month: MONTH.NOVEMBER, day: 11, type: 'fixed' },
+                { name: "Thanksgiving Day", month: MONTH.NOVEMBER, day: NO_FIXED_DAY, dayOfWeek: DAY_OF_WEEK.THURSDAY, occurrence: WEEK_OCCURRENCE.FOURTH, referenceDate: '2025-11-27', type: 'floating' },
+                { name: "Christmas Day", month: MONTH.DECEMBER, day: 25, type: 'fixed' }
             ];
 
             // Create schedule spans for each holiday
             holidays.forEach(function(holiday) {
                 var beginningOfHoliday, endOfHoliday;
-                if(holiday.day == NO_FIXED_DAY) {
+                if(holiday.type == 'floating') {
                     var referenceDate = new GlideDateTime(holiday.referenceDate).getDate();
                     beginningOfHoliday = referenceDate.getDisplayValue() + ' ' + '00:00:00'; // Format should be yyyyMMddTHH:mm:ss
                     endOfHoliday = referenceDate.getDisplayValue() + ' ' + '23:59:59'; // Format should be yyyyMMddTHH:mm:ss
@@ -325,18 +329,16 @@ x_912467_klf.DateUtils = (function() {
                 span.start_date_time = beginningOfHoliday; // This is not a normal DateTime field. It's a Schedule Date/Time field
                 span.end_date_time = endOfHoliday; // This is not a normal DateTime field. It's a Schedule Date/Time field
                 
-                if (holiday.day > NO_FIXED_DAY) {
-                    // Fixed date holiday (e.g., July 4, December 25)
-                    span.yearly_type = 'doy';
-                    span.float_day = false;
-                } else {
+                if (holiday.type === 'floating') {
                     // Floating holiday (e.g., 3rd Monday in January)
                     span.yearly_type = 'float';
-                    span.month = holiday.month;
-                    span.float_week = holiday.occurrence == WEEK_OCCURRENCE.LAST ? 'last' : holiday.occurrence;
+                    span.month = holiday.month.toString(); // Convert to string because this will throw an error in scoped applications
+                    span.float_week = holiday.occurrence == WEEK_OCCURRENCE.LAST ? 'last' : holiday.occurrence.toString(); // Convert to string because this will throw an error in scoped applications
                     span.float_day = holiday.dayOfWeek;
+                } else {
+                    // Fixed date holiday (e.g., July 4, December 25)
+                    span.yearly_type = 'doy';
                 }
-                
                 span.insert();
             });
 
@@ -495,10 +497,24 @@ x_912467_klf.DateUtils = (function() {
         /**
          * Creates the default Federal Business Day schedule and updates the system property. 
          * That points to the schedule for the added business days calculations.
+         * @returns {string} The sys_id of the newly created cmn_schedule record
          */
         createDefaultFederalBusinessDayScheduleAndUpdateSystemProperty: function() {
+            gs.info('Creating default Federal Business Day schedule');
             var scheduleId = this.createFederalBusinessDaySchedule('Federal Business Day');
+
+            gs.info('Updating system property x_912467_klf.DateUtils.business_days_schedule_sys_id to ' + scheduleId);
             gs.setProperty('x_912467_klf.DateUtils.business_days_schedule_sys_id', scheduleId);
+
+            gs.info('Updating access for DurationCalculator script include to public');
+            // This script also has a dependency on DurationCalculator script include. By default the DurationCalculator
+            // script include is not available in scoped applications. To resolve this we need to
+            // make DurationCalculator accessible to all scopes by setting its access to public.
+            new global.KLF_GlideRecordUtils().updateRecord('sys_script_include', 'sys_id=c14b7dd30a6a803f2f25e0e60a457f7b', {
+                access: 'public'
+            });
+
+            return scheduleId;
         }
     };
 })();]]></script>
@@ -506,13 +522,13 @@ x_912467_klf.DateUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:31</sys_created_on>
         <sys_id>1402e95197682910b2e1f97e6253af2d</sys_id>
-        <sys_mod_count>73</sys_mod_count>
+        <sys_mod_count>86</sys_mod_count>
         <sys_name>DateUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1402e95197682910b2e1f97e6253af2d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-10-29 14:43:06</sys_updated_on>
+        <sys_updated_on>2025-10-29 16:38:55</sys_updated_on>
     </sys_script_include>
 </record_update>
