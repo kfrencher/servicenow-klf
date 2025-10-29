@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_912467_klf.DateUtilsTest</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>DateUtilsTest</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * Unit tests for x_912467_klf.DateUtils
+ */
+
+// @ts-ignore
+function DateUtilsTest(outputs, steps, params, stepResult, assertEqual) {
+
+    /**
+     * Returns a GlideDateTime set to the local time zone based on the provided date string
+     * @param {string} dateString 
+     * @returns {GlideDateTime}
+     */
+    function getLocalDateTime(dateString) {
+        var gdt = new GlideDateTime();
+        gdt.setDisplayValue(dateString);
+        return gdt;
+    }
+
+    describe('x_912467_klf.DateUtils', function() {
+        /** @type {global.KLF_TestUtils} */
+        var testUtils;
+
+        beforeEach(function() {
+            testUtils = new global.KLF_TestUtils();
+        });
+
+        afterEach(function() {
+            // testUtils.cleanup();
+        });
+
+        describe('getFiscalYear()', function() {
+            it('should return next year for October', function() {
+                var dateTime = getLocalDateTime('2024-10-01 12:00:00');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2025, 'October should be in FY 2025');
+            });
+
+            it('should return next year for November', function() {
+                var dateTime = getLocalDateTime('2024-11-15 12:00:00');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2025, 'November should be in FY 2025');
+            });
+
+            it('should return next year for December', function() {
+                var dateTime = getLocalDateTime('2024-12-31 23:59:59');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2025, 'December should be in FY 2025');
+            });
+
+            it('should return same year for January', function() {
+                var dateTime = getLocalDateTime('2024-01-01 00:00:00');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2024, 'January should be in FY 2024');
+            });
+
+            it('should return same year for September', function() {
+                var dateTime = getLocalDateTime('2024-09-30 23:59:59');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2024, 'September should be in FY 2024');
+            });
+
+            it('should return same year for all months January through September', function() {
+                var year = 2024;
+                var expectedFiscalYear = 2024;
+                var months = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                
+                for (var i = 0; i < months.length; i++) {
+                    var month = months[i];
+                    var monthStr = month < 10 ? '0' + month : month.toString();
+                    var dateTime = getLocalDateTime(year + '-' + monthStr + '-15 12:00:00');
+                    var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                    
+                    expect(fiscalYear).toBe(expectedFiscalYear, 'Month ' + month + ' should be in FY ' + expectedFiscalYear);
+                }
+            });
+
+            it('should return next year for all months October through December', function() {
+                var year = 2024;
+                var expectedFiscalYear = 2025;
+                var months = [10, 11, 12];
+                
+                for (var i = 0; i < months.length; i++) {
+                    var month = months[i];
+                    var dateTime = getLocalDateTime(year + '-' + month + '-15 12:00:00');
+                    var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                    
+                    expect(fiscalYear).toBe(expectedFiscalYear, 'Month ' + month + ' should be in FY ' + expectedFiscalYear);
+                }
+            });
+
+            it('should handle fiscal year boundary at end of September', function() {
+                var septemberEnd = getLocalDateTime('2024-09-30 23:59:59');
+                var octoberStart = getLocalDateTime('2024-10-01 00:00:00');
+                
+                var fiscalYearSept = x_912467_klf.DateUtils.getFiscalYear(septemberEnd);
+                var fiscalYearOct = x_912467_klf.DateUtils.getFiscalYear(octoberStart);
+                
+                expect(fiscalYearSept).toBe(2024, 'Last moment of September should be in FY 2024');
+                expect(fiscalYearOct).toBe(2025, 'First moment of October should be in FY 2025');
+            });
+
+            it('should work correctly for different years', function() {
+                var years = [2020, 2023, 2025, 2030];
+                
+                for (var i = 0; i < years.length; i++) {
+                    var year = years[i];
+                    var octoberDate = getLocalDateTime(year + '-10-01 12:00:00');
+                    var juneDate = getLocalDateTime(year + '-06-15 12:00:00');
+                    
+                    expect(x_912467_klf.DateUtils.getFiscalYear(octoberDate)).toBe(year + 1, 'October ' + year + ' should be in FY ' + (year + 1));
+                    expect(x_912467_klf.DateUtils.getFiscalYear(juneDate)).toBe(year, 'June ' + year + ' should be in FY ' + year);
+                }
+            });
+
+            it('should handle beginning of fiscal year correctly', function() {
+                var dateTime = getLocalDateTime('2024-10-01 00:00:00');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2025, 'October 1st should be start of FY 2025');
+            });
+
+            it('should handle end of fiscal year correctly', function() {
+                var dateTime = getLocalDateTime('2024-09-30 23:59:59');
+                var fiscalYear = x_912467_klf.DateUtils.getFiscalYear(dateTime);
+                
+                expect(fiscalYear).toBe(2024, 'September 30th should be end of FY 2024');
+            });
+        });
+
+        describe('getCurrentFiscalYear()', function() {
+            it('should return a number', function() {
+                const fiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                
+                expect(typeof fiscalYear).toBe('number', 'Fiscal year should be a number');
+            });
+
+            it('should return a valid 4-digit year', function() {
+                const fiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                
+                expect(fiscalYear).toBeGreaterThan(2020, 'Fiscal year should be greater than 2020');
+                expect(fiscalYear).toBeLessThan(2100, 'Fiscal year should be less than 2100');
+                expect(fiscalYear.toString().length).toBe(4, 'Fiscal year should be 4 digits');
+            });
+
+            it('should return consistent value when called multiple times', function() {
+                const fiscalYear1 = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const fiscalYear2 = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                
+                expect(fiscalYear1).toBe(fiscalYear2, 'Multiple calls should return same fiscal year');
+            });
+
+            it('should match getFiscalYear with current date', function() {
+                const currentDateTime = new GlideDateTime();
+                const fiscalYearFromCurrent = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const fiscalYearFromGlideDateTime = x_912467_klf.DateUtils.getFiscalYear(currentDateTime);
+                
+                expect(fiscalYearFromCurrent).toBe(fiscalYearFromGlideDateTime, 
+                    'getCurrentFiscalYear should match getFiscalYear with current date');
+            });
+
+            it('should return current year plus one if current month is October or later', function() {
+                const now = new GlideDateTime();
+                const currentMonth = now.getMonthLocalTime();
+                const currentYear = now.getYearLocalTime();
+                const fiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                
+                if (currentMonth >= 10 && currentMonth <= 12) {
+                    expect(fiscalYear).toBe(currentYear + 1, 
+                        'Fiscal year should be current year + 1 for October-December');
+                } else {
+                    expect(fiscalYear).toBe(currentYear, 
+                        'Fiscal year should be current year for January-September');
+                }
+            });
+        });
+
+        describe('getFiscalYearStartDate()', function() {
+            it('should return a GlideDate object', function() {
+                const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate();
+                
+                expect(startDate).toBeDefined('Start date should be defined');
+                expect(startDate.getByFormat).toBeDefined('Should be a GlideDate object with getByFormat method');
+            });
+
+            it('should return October 1st of previous year when no parameter provided', function() {
+                const currentFiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate();
+                const formattedDate = startDate.getByFormat('YYYY-MM-dd');
+                
+                const expectedYear = currentFiscalYear - 1;
+                const expectedDate = expectedYear + '-10-01';
+                
+                expect(formattedDate).toBe(expectedDate, 'Start date should be October 1st of previous year');
+            });
+
+            it('should return October 1st for current fiscal year when yearsAgo is 0', function() {
+                const currentFiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate(0);
+                const formattedDate = startDate.getByFormat('YYYY-MM-dd');
+                
+                const expectedYear = currentFiscalYear - 1;
+                const expectedDate = expectedYear + '-10-01';
+                
+                expect(formattedDate).toBe(expectedDate, 'Start date should be October 1st of previous year');
+            });
+
+            it('should return October 1st for fiscal year 1 year ago when yearsAgo is 1', function() {
+                const currentFiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate(1);
+                const formattedDate = startDate.getByFormat('YYYY-MM-dd');
+                
+                const expectedYear = currentFiscalYear - 2;
+                const expectedDate = expectedYear + '-10-01';
+                
+                expect(formattedDate).toBe(expectedDate, 'Start date should be October 1st two years prior');
+            });
+
+            it('should return October 1st for fiscal year 2 years ago when yearsAgo is 2', function() {
+                const currentFiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate(2);
+                const formattedDate = startDate.getByFormat('YYYY-MM-dd');
+                
+                const expectedYear = currentFiscalYear - 3;
+                const expectedDate = expectedYear + '-10-01';
+                
+                expect(formattedDate).toBe(expectedDate, 'Start date should be October 1st three years prior');
+            });
+
+            it('should handle multiple years ago parameter', function() {
+                const currentFiscalYear = x_912467_klf.DateUtils.getCurrentFiscalYear();
+                const yearsToTest = [0, 1, 2, 3, 5, 10];
+                
+                for (var i = 0; i < yearsToTest.length; i++) {
+                    const yearsAgo = yearsToTest[i];
+                    const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate(yearsAgo);
+                    const formattedDate = startDate.getByFormat('YYYY-MM-dd');
+                    
+                    const expectedYear = currentFiscalYear - yearsAgo - 1;
+                    const expectedDate = expectedYear + '-10-01';
+                    
+                    expect(formattedDate).toBe(expectedDate, 
+                        'Start date should be October 1st for ' + yearsAgo + ' years ago');
+                }
+            });
+
+            it('should always return October 1st regardless of current date', function() {
+                const startDate = x_912467_klf.DateUtils.getFiscalYearStartDate();
+                const formattedDate = startDate.getByFormat('YYYY-MM-dd');
+                
+                expect(formattedDate).toMatch(/^\d{4}-10-01$/, 'Date should always be October 1st');
+            });
+
+            it('should return consistent results when called multiple times with same parameter', function() {
+                const startDate1 = x_912467_klf.DateUtils.getFiscalYearStartDate(1);
+                const startDate2 = x_912467_klf.DateUtils.getFiscalYearStartDate(1);
+                
+                const formattedDate1 = startDate1.getByFormat('YYYY-MM-dd');
+                const formattedDate2 = startDate2.getByFormat('YYYY-MM-dd');
+                
+                expect(formattedDate1).toBe(formattedDate2, 'Multiple calls should return same date');
+            });
+
+            it('should return dates in correct chronological order', function() {
+                const startDate0 = x_912467_klf.DateUtils.getFiscalYearStartDate(0);
+                const startDate1 = x_912467_klf.DateUtils.getFiscalYearStartDate(1);
+                const startDate2 = x_912467_klf.DateUtils.getFiscalYearStartDate(2);
+                
+                const date0 = startDate0.getByFormat('YYYY-MM-dd');
+                const date1 = startDate1.getByFormat('YYYY-MM-dd');
+                const date2 = startDate2.getByFormat('YYYY-MM-dd');
+                
+                expect(date0 > date1).toBe(true, 'Current FY start should be after previous FY start');
+                expect(date1 > date2).toBe(true, 'Previous FY start should be after 2 years ago FY start');
+            });
+        });
+
+        describe('addBusinessDaysToDate()', function() {
+            it('adds business days within the same week', function() {
+                // Get the first Monday in March of next year (no holidays in early March)
+                var nextYear = new GlideDateTime().getYearLocalTime() + 1;
+                var marchFirst = new GlideDateTime();
+                marchFirst.setDisplayValue(nextYear + '-03-01 00:00:00');
+                var dayOfWeek = marchFirst.getDayOfWeekLocalTime(); // 1=Monday, 2=Tuesday, ..., 7=Sunday
+                
+                // Calculate days until the first Monday
+                var daysUntilMonday = (1 - dayOfWeek + 7) % 7;
+                marchFirst.addDaysLocalTime(daysUntilMonday);
+                var start = marchFirst.getLocalDate();
+                
+                // Monday + 4 business days = Friday (same week)
+                var expectedDateTime = new GlideDateTime();
+                expectedDateTime.setDisplayValue(start.getByFormat('YYYY-MM-dd'));
+                expectedDateTime.addDaysLocalTime(4);
+                var expectedEnd = expectedDateTime.getLocalDate();
+                
+                var result = x_912467_klf.DateUtils.addBusinessDaysToDate(start, 4);
+                var formatted = result.getByFormat('YYYY-MM-dd');
+                var expected = expectedEnd.getByFormat('YYYY-MM-dd');
+                
+                expect(formatted).toBe(expected, 'Monday + 4 business days should be Friday of the same week');
+            });
+
+            it('skips Labor Day (first Monday in September)', function() {
+                // Get the first Monday in September of next year (Labor Day)
+                var nextYear = new GlideDateTime().getYearLocalTime() + 1;
+                var septFirst = new GlideDateTime();
+                septFirst.setDisplayValue(nextYear + '-09-01 00:00:00');
+                var dayOfWeek = septFirst.getDayOfWeekLocalTime(); // 1=Monday, 2=Tuesday, ..., 7=Sunday
+                
+                // Calculate days until the first Monday
+                var daysUntilMonday = (1 - dayOfWeek + 7) % 7;
+                septFirst.addDaysLocalTime(daysUntilMonday);
+                var laborDay = septFirst.getLocalDate();
+                
+                // Get the Friday before Labor Day
+                var fridayBeforeLaborDay = new GlideDateTime();
+                fridayBeforeLaborDay.setDisplayValue(laborDay.getByFormat('YYYY-MM-dd'));
+                fridayBeforeLaborDay.addDaysLocalTime(-3); // Go back 3 days from Monday to Friday
+                var start = fridayBeforeLaborDay.getLocalDate();
+                
+                // Friday + 1 business day should skip Labor Day (Monday) and land on Tuesday
+                var expectedDateTime = new GlideDateTime();
+                expectedDateTime.setDisplayValue(laborDay.getByFormat('YYYY-MM-dd'));
+                expectedDateTime.addDaysLocalTime(1); // Tuesday after Labor Day
+                var expected = expectedDateTime.getLocalDate().getByFormat('YYYY-MM-dd');
+                
+                var result = x_912467_klf.DateUtils.addBusinessDaysToDate(start, 1);
+                var formatted = result.getByFormat('YYYY-MM-dd');
+                
+                expect(formatted).toBe(expected, 'Friday + 1 business day should skip Labor Day and land on Tuesday');
+            });
+        });
+
+        describe('subtractBusinessDaysToDate()', function() {
+            it('subtracts business days within the same week', function() {
+                // Get the first Monday in March of next year, then move to Friday
+                var nextYear = new GlideDateTime().getYearLocalTime() + 1;
+                var marchFirst = new GlideDateTime();
+                marchFirst.setDisplayValue(nextYear + '-03-01 00:00:00');
+                var dayOfWeek = marchFirst.getDayOfWeekLocalTime(); // 1=Monday, 2=Tuesday, ..., 7=Sunday
+                
+                // Calculate days until the first Monday
+                var daysUntilMonday = (1 - dayOfWeek + 7) % 7;
+                marchFirst.addDaysLocalTime(daysUntilMonday);
+                
+                // Move to Friday (Monday + 4 days)
+                marchFirst.addDaysLocalTime(4);
+                var start = marchFirst.getLocalDate();
+                
+                // Friday - 4 business days = Monday (same week)
+                var expectedDateTime = new GlideDateTime();
+                expectedDateTime.setDisplayValue(start.getByFormat('YYYY-MM-dd'));
+                expectedDateTime.addDaysLocalTime(-4);
+                var expectedEnd = expectedDateTime.getLocalDate();
+                
+                var result = x_912467_klf.DateUtils.subtractBusinessDaysToDate(start, 4);
+                var formatted = result.getByFormat('YYYY-MM-dd');
+                var expected = expectedEnd.getByFormat('YYYY-MM-dd');
+                
+                expect(formatted).toBe(expected, 'Friday - 4 business days should be Monday of the same week');
+            });
+
+            it('skips Labor Day when subtracting (first Monday in September)', function() {
+                // Get the first Monday in September of next year (Labor Day)
+                var nextYear = new GlideDateTime().getYearLocalTime() + 1;
+                var septFirst = new GlideDateTime();
+                septFirst.setDisplayValue(nextYear + '-09-01 00:00:00');
+                var dayOfWeek = septFirst.getDayOfWeekLocalTime(); // 1=Monday, 2=Tuesday, ..., 7=Sunday
+                
+                // Calculate days until the first Monday
+                var daysUntilMonday = (1 - dayOfWeek + 7) % 7;
+                septFirst.addDaysLocalTime(daysUntilMonday);
+                var laborDay = septFirst.getLocalDate();
+                
+                // Get the Tuesday after Labor Day
+                var tuesdayAfterLaborDay = new GlideDateTime();
+                tuesdayAfterLaborDay.setDisplayValue(laborDay.getByFormat('YYYY-MM-dd'));
+                tuesdayAfterLaborDay.addDaysLocalTime(1); // Tuesday after Labor Day
+                var start = tuesdayAfterLaborDay.getLocalDate();
+                
+                // Tuesday - 1 business day should skip Labor Day (Monday) and land on Friday
+                var expectedDateTime = new GlideDateTime();
+                expectedDateTime.setDisplayValue(laborDay.getByFormat('YYYY-MM-dd'));
+                expectedDateTime.addDaysLocalTime(-3); // Friday before Labor Day
+                var expected = expectedDateTime.getLocalDate().getByFormat('YYYY-MM-dd');
+                
+                var result = x_912467_klf.DateUtils.subtractBusinessDaysToDate(start, 1);
+                var formatted = result.getByFormat('YYYY-MM-dd');
+                
+                expect(formatted).toBe(expected, 'Tuesday - 1 business day should skip Labor Day and land on Friday');
+            });
+        });
+
+        describe('createFederalHolidaySchedule()', function() {
+            it('should create a schedule and return a sys_id', function() {
+                var scheduleName = 'Test Federal Holidays ' + gs.generateGUID();
+                
+                var scheduleSysId = x_912467_klf.DateUtils.createFederalHolidaySchedule(scheduleName);
+                testUtils.recordTracker.trackBySysId(scheduleSysId, 'cmn_schedule');
+                
+                expect(scheduleSysId).toBeDefined('Schedule sys_id should be defined');
+                expect(scheduleSysId).not.toBe('', 'Schedule sys_id should not be empty');
+                
+                // Verify the schedule was created
+                var schedule = new GlideRecord('cmn_schedule');
+                if (schedule.get(scheduleSysId)) {
+                    expect(schedule.getValue('name')).toBe(scheduleName, 'Schedule name should match');
+                    expect(schedule.getValue('type')).toBe('exclude', 'Schedule type should be exclude');
+                    expect(schedule.getValue('time_zone')).toBe('US/Eastern', 'Time zone should be US/Eastern');
+                } else {
+                    fail('Schedule record should exist');
+                }
+            });
+
+            it('should create schedule with 11 federal holiday spans', function() {
+                var scheduleName = 'Test Federal Holidays ' + gs.generateGUID();
+                
+                var scheduleSysId = x_912467_klf.DateUtils.createFederalHolidaySchedule(scheduleName);
+                testUtils.recordTracker.trackBySysId(scheduleSysId, 'cmn_schedule');
+                
+                // Count the schedule spans
+                var spanGr = new GlideRecord('cmn_schedule_span');
+                spanGr.addQuery('schedule', scheduleSysId);
+                spanGr.query();
+                
+                var spanCount = 0;
+                while (spanGr.next()) {
+                    spanCount++;
+                }
+                
+                expect(spanCount).toBe(11, 'Should create 11 federal holiday spans');
+            });
+
+            it('should throw error when schedule name already exists', function() {
+                var scheduleName = 'Test Federal Holidays ' + gs.generateGUID();
+                
+                // Create the first schedule
+                var scheduleSysId = x_912467_klf.DateUtils.createFederalHolidaySchedule(scheduleName);
+                testUtils.recordTracker.trackBySysId(scheduleSysId, 'cmn_schedule');
+                
+                // Try to create another with the same name
+                var errorThrown = false;
+                try {
+                    x_912467_klf.DateUtils.createFederalHolidaySchedule(scheduleName);
+                } catch (/** @type {any} */ e) {
+                    errorThrown = true;
+                    expect(e.message).toContain('already exists', 'Error message should mention schedule already exists');
+                }
+                
+                expect(errorThrown).toBe(true, 'Should throw an error when schedule name already exists');
+            });
+        });
+
+        describe('createWeekendSchedule()', function() {
+            it('should create a schedule and return a sys_id', function() {
+                var scheduleName = 'Test Weekend Schedule ' + gs.generateGUID();
+                
+                var scheduleSysId = x_912467_klf.DateUtils.createWeekendSchedule(scheduleName);
+                testUtils.recordTracker.trackBySysId(scheduleSysId, 'cmn_schedule');
+                
+                expect(scheduleSysId).toBeDefined('Schedule sys_id should be defined');
+                expect(scheduleSysId).not.toBe('', 'Schedule sys_id should not be empty');
+                
+                // Verify the schedule was created
+                var schedule = new GlideRecord('cmn_schedule');
+                if (schedule.get(scheduleSysId)) {
+                    expect(schedule.getValue('name')).toBe(scheduleName, 'Schedule name should match');
+                    expect(schedule.getValue('type')).toBe('exclude', 'Schedule type should be exclude');
+                } else {
+                    fail('Schedule record should exist');
+                }
+            });
+
+            it('should create schedule with 2 weekend day spans', function() {
+                var scheduleName = 'Test Weekend Schedule ' + gs.generateGUID();
+                
+                var scheduleSysId = x_912467_klf.DateUtils.createWeekendSchedule(scheduleName);
+                testUtils.recordTracker.trackBySysId(scheduleSysId, 'cmn_schedule');
+                
+                // Count the schedule spans
+                var spanGr = new GlideRecord('cmn_schedule_span');
+                spanGr.addQuery('schedule', scheduleSysId);
+                spanGr.query();
+                
+                var spanCount = 0;
+                while (spanGr.next()) {
+                    spanCount++;
+                }
+                
+                expect(spanCount).toBe(2, 'Should create 2 weekend day spans (Saturday and Sunday)');
+            });
+
+            it('should throw error when schedule name already exists', function() {
+                var scheduleName = 'Test Weekend Schedule ' + gs.generateGUID();
+                
+                // Create the first schedule
+                var scheduleSysId = x_912467_klf.DateUtils.createWeekendSchedule(scheduleName);
+                testUtils.recordTracker.trackBySysId(scheduleSysId, 'cmn_schedule');
+                
+                // Try to create another with the same name
+                var errorThrown = false;
+                try {
+                    x_912467_klf.DateUtils.createWeekendSchedule(scheduleName);
+                } catch (/** @type {any} */ e) {
+                    errorThrown = true;
+                    expect(e.message).toContain('already exists', 'Error message should mention schedule already exists');
+                }
+                
+                expect(errorThrown).toBe(true, 'Should throw an error when schedule name already exists');
+            });
+        });
+    });
+}]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-10-27 23:21:39</sys_created_on>
+        <sys_id>30a64d2e837cf6103c9299e0deaad347</sys_id>
+        <sys_mod_count>31</sys_mod_count>
+        <sys_name>DateUtilsTest</sys_name>
+        <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
+        <sys_update_name>sys_script_include_30a64d2e837cf6103c9299e0deaad347</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-10-29 01:21:31</sys_updated_on>
+    </sys_script_include>
+</record_update>
