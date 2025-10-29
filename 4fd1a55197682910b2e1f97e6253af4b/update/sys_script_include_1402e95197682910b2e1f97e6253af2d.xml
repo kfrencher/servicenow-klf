@@ -10,12 +10,17 @@
         <name>DateUtils</name>
         <sandbox_callable>false</sandbox_callable>
         <script><![CDATA[/**
- * Utility object for date-related operations. This object is particularly useful for
- * getting information related to the Federal Government's fiscal year.
+ * Date utility helpers for fiscal year calculations and business-day arithmetic.
  * 
- * Functions such as getFiscalYear, getCurrentFiscalYear, getFiscalYearStartDate.
- * 
- * As well as doing calculations based on business days such as addBusinessDaysToDate.
+ * Highlights:
+ * - {@link x_912467_klf.DateUtils.getFiscalYear | getFiscalYear}: Given a GlideDateTime, returns the Federal fiscal year (YYYY),
+ *   where dates in October–December are counted toward the next fiscal year.
+ * - {@link x_912467_klf.DateUtils.getCurrentFiscalYear | getCurrentFiscalYear}: Convenience method that returns
+ *   the current Federal fiscal year based on the instance’s local time.
+ * - {@link x_912467_klf.DateUtils.getFiscalYearStartDate | getFiscalYearStartDate}: Returns a GlideDate representing
+ *   the start of a fiscal year (Oct 1). Optionally offset by N prior fiscal years.
+ * - {@link x_912467_klf.DateUtils.addBusinessDaysToDate | addBusinessDaysToDate}: Adds N business days to a given GlideDate,
+ *   honoring a ServiceNow schedule (excluding weekends/holidays via the configured schedule).
  */
 
 //@ts-ignore
@@ -522,13 +527,13 @@ x_912467_klf.DateUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:31</sys_created_on>
         <sys_id>1402e95197682910b2e1f97e6253af2d</sys_id>
-        <sys_mod_count>86</sys_mod_count>
+        <sys_mod_count>87</sys_mod_count>
         <sys_name>DateUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1402e95197682910b2e1f97e6253af2d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-10-29 16:38:55</sys_updated_on>
+        <sys_updated_on>2025-10-29 16:48:04</sys_updated_on>
     </sys_script_include>
 </record_update>
