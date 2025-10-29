@@ -106,7 +106,10 @@ x_912467_klf.DateUtils = (function() {
         checkSchedule: function(scheduleSysId) {
             var scheduleGr = new GlideRecord('cmn_schedule');
             if (!scheduleGr.get(scheduleSysId)) {
-                throw new Error('Schedule with sys_id "' + scheduleSysId + '" does not exist.');
+                var errorMessage = `Schedule with sys_id "${scheduleSysId}" does not exist.
+                You may need to update the property 'x_912467_klf.DateUtils.business_days_schedule_sys_id' to point to a valid schedule.
+                If a schedule has not been created yet, you can create one using the x_912467_klf.DateUtils.createFederalBusinessDaySchedule function.`;
+                throw new Error(errorMessage);
             }
         },
 
@@ -232,7 +235,6 @@ x_912467_klf.DateUtils = (function() {
             // Need to use KLF_GlideRecordUtils because of scoped application insert restrictions
             var scheduleGr = new global.KLF_GlideRecordUtils().insertRecord('cmn_schedule', {
                 name: scheduleName,
-                type: 'exclude', // Exclude schedule type for holidays
                 time_zone: 'US/Eastern' // Federal holidays are typically based on Eastern time
             });
             if(!scheduleGr.isValidRecord()) {
@@ -363,7 +365,6 @@ x_912467_klf.DateUtils = (function() {
             // Need to use KLF_GlideRecordUtils because of scoped application insert restrictions
             var scheduleGr = new global.KLF_GlideRecordUtils().insertRecord('cmn_schedule', {
                 name: scheduleName,
-                type: 'exclude', // Exclude schedule type for holidays
                 time_zone: 'US/Eastern' // Federal holidays are typically based on Eastern time
             });
             if(!scheduleGr.isValidRecord()) {
@@ -408,6 +409,87 @@ x_912467_klf.DateUtils = (function() {
 
             gs.info('Created weekend schedule "' + scheduleName + '" with sys_id: ' + scheduleSysId);
             return scheduleSysId;
+        },
+
+        /**
+         * Creates a schedule for Federal Business Days
+         * This schedule includes weekdays, excludes weekends and federal holidays
+         * 
+         * Three schedules are created:
+         * 1. Main schedule for weekdays (Monday to Friday)
+         * 2. Holiday schedule for federal holidays - These are excluded from the main schedule
+         * 3. Weekend schedule for Saturdays and Sundays - These are excluded from the main schedule
+         * 
+         * You can optionally provide names for the holiday and weekend schedules. If not provided,
+         * default names will be used.
+         * 
+         * @param {string} scheduleName - The name of the schedule to create
+         * @param {string} [holidayScheduleName = 'Federal Holiday Schedule'] - The name of the holiday schedule to create
+         * @param {string} [weekendScheduleName = 'Federal Weekend Schedule'] - The name of the weekend schedule to create
+         * @returns {string} The sys_id of the newly created cmn_schedule record
+         * @throws {Error} If a schedule with the given name already exists
+         */
+        createFederalBusinessDaySchedule: function(scheduleName, holidayScheduleName, weekendScheduleName) {
+            // Check if schedule already exists
+            var existingSchedule = new GlideRecord('cmn_schedule');
+            existingSchedule.addQuery('name', scheduleName);
+            existingSchedule.query();
+            if (existingSchedule.next()) {
+                throw new Error('Schedule with name "' + scheduleName + '" already exists with sys_id: ' + existingSchedule.getUniqueValue());
+            }
+
+            // Create the schedule
+            // Need to use KLF_GlideRecordUtils because of scoped application insert restrictions
+            var scheduleGr = new global.KLF_GlideRecordUtils().insertRecord('cmn_schedule', {
+                name: scheduleName,
+                time_zone: 'US/Eastern' // Federal holidays are typically based on Eastern time
+            });
+            if(!scheduleGr.isValidRecord()) {
+                throw new Error('Failed to create schedule');
+            }
+            var scheduleSysId = scheduleGr.getUniqueValue();
+
+            if (!scheduleSysId) {
+                throw new Error('Failed to create schedule');
+            }
+
+            var _holidayScheduleName = holidayScheduleName || 'Federal Holidays Schedule';
+            var _weekendScheduleName = weekendScheduleName || 'Federal Weekend Schedule';
+            var holidayScheduleSysId = this.createFederalHolidaySchedule(_holidayScheduleName);
+            var weekendScheduleSysId = this.createWeekendSchedule(_weekendScheduleName);
+
+            // Create schedule spans for weekdays (Monday to Friday)
+            var weekdaySpan = new GlideRecord('cmn_schedule_span');
+            weekdaySpan.newRecord();
+            weekdaySpan.schedule = scheduleSysId;
+            weekdaySpan.name = 'Weekdays (Monday to Friday)';
+            weekdaySpan.repeat_type = 'weekdays';
+            var referenceDate = new GlideDateTime().getDate();
+            var beginningOfDay = referenceDate.getDisplayValue() + ' ' + '00:00:00';
+            var endOfDay = referenceDate.getDisplayValue() + ' ' + '23:59:59';
+            weekdaySpan.start_date_time = beginningOfDay; 
+            weekdaySpan.end_date_time = endOfDay;
+            weekdaySpan.insert();
+
+            // Link the holiday and weekend schedules as exclusions
+            var holidayExclusion = new GlideRecord('cmn_other_schedule');
+            holidayExclusion.newRecord();
+            holidayExclusion.schedule = scheduleSysId;
+            holidayExclusion.child_schedule = holidayScheduleSysId;
+            holidayExclusion.time_zone = 'US/Eastern';
+            holidayExclusion.type = 'include';
+            holidayExclusion.insert();
+
+            var weekendExclusion = new GlideRecord('cmn_other_schedule');
+            weekendExclusion.newRecord();
+            weekendExclusion.schedule = scheduleSysId;
+            weekendExclusion.child_schedule = weekendScheduleSysId;
+            weekendExclusion.time_zone = 'US/Eastern';
+            weekendExclusion.type = 'include';
+            weekendExclusion.insert();
+
+            gs.info('Created weekday schedule "' + scheduleName + '" with sys_id: ' + scheduleSysId);
+            return scheduleSysId;
         }
     };
 })();]]></script>
@@ -415,13 +497,13 @@ x_912467_klf.DateUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:31</sys_created_on>
         <sys_id>1402e95197682910b2e1f97e6253af2d</sys_id>
-        <sys_mod_count>62</sys_mod_count>
+        <sys_mod_count>68</sys_mod_count>
         <sys_name>DateUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1402e95197682910b2e1f97e6253af2d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-10-29 01:17:46</sys_updated_on>
+        <sys_updated_on>2025-10-29 13:54:30</sys_updated_on>
     </sys_script_include>
 </record_update>
