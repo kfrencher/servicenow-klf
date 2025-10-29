@@ -108,7 +108,7 @@ x_912467_klf.DateUtils = (function() {
             if (!scheduleGr.get(scheduleSysId)) {
                 var errorMessage = `Schedule with sys_id "${scheduleSysId}" does not exist.
                 You may need to update the property 'x_912467_klf.DateUtils.business_days_schedule_sys_id' to point to a valid schedule.
-                If a schedule has not been created yet, you can create one using the x_912467_klf.DateUtils.createFederalBusinessDaySchedule function.`;
+                If a schedule has not been created yet, you can create one using the x_912467_klf.DateUtils.createDefaultFederalBusinessDayScheduleAndUpdateSystemProperty function.`;
                 throw new Error(errorMessage);
             }
         },
@@ -424,8 +424,8 @@ x_912467_klf.DateUtils = (function() {
          * default names will be used.
          * 
          * @param {string} scheduleName - The name of the schedule to create
-         * @param {string} [holidayScheduleName = 'Federal Holiday Schedule'] - The name of the holiday schedule to create
-         * @param {string} [weekendScheduleName = 'Federal Weekend Schedule'] - The name of the weekend schedule to create
+         * @param {string} [holidayScheduleName = 'Federal Holiday'] - The name of the holiday schedule to create
+         * @param {string} [weekendScheduleName = 'Federal Weekend'] - The name of the weekend schedule to create
          * @returns {string} The sys_id of the newly created cmn_schedule record
          * @throws {Error} If a schedule with the given name already exists
          */
@@ -453,8 +453,8 @@ x_912467_klf.DateUtils = (function() {
                 throw new Error('Failed to create schedule');
             }
 
-            var _holidayScheduleName = holidayScheduleName || 'Federal Holidays Schedule';
-            var _weekendScheduleName = weekendScheduleName || 'Federal Weekend Schedule';
+            var _holidayScheduleName = holidayScheduleName || 'Federal Holidays';
+            var _weekendScheduleName = weekendScheduleName || 'Federal Weekend';
             var holidayScheduleSysId = this.createFederalHolidaySchedule(_holidayScheduleName);
             var weekendScheduleSysId = this.createWeekendSchedule(_weekendScheduleName);
 
@@ -490,6 +490,15 @@ x_912467_klf.DateUtils = (function() {
 
             gs.info('Created weekday schedule "' + scheduleName + '" with sys_id: ' + scheduleSysId);
             return scheduleSysId;
+        },
+
+        /**
+         * Creates the default Federal Business Day schedule and updates the system property. 
+         * That points to the schedule for the added business days calculations.
+         */
+        createDefaultFederalBusinessDayScheduleAndUpdateSystemProperty: function() {
+            var scheduleId = this.createFederalBusinessDaySchedule('Federal Business Day');
+            gs.setProperty('x_912467_klf.DateUtils.business_days_schedule_sys_id', scheduleId);
         }
     };
 })();]]></script>
@@ -497,13 +506,13 @@ x_912467_klf.DateUtils = (function() {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2023-01-21 12:57:31</sys_created_on>
         <sys_id>1402e95197682910b2e1f97e6253af2d</sys_id>
-        <sys_mod_count>68</sys_mod_count>
+        <sys_mod_count>73</sys_mod_count>
         <sys_name>DateUtils</sys_name>
         <sys_package display_value="KLF" source="x_912467_klf">4fd1a55197682910b2e1f97e6253af4b</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="KLF">4fd1a55197682910b2e1f97e6253af4b</sys_scope>
         <sys_update_name>sys_script_include_1402e95197682910b2e1f97e6253af2d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-10-29 13:54:30</sys_updated_on>
+        <sys_updated_on>2025-10-29 14:43:06</sys_updated_on>
     </sys_script_include>
 </record_update>
